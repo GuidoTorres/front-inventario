@@ -22,7 +22,7 @@ const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [title, setTitle] = useState("Trabajador");
   const { setIsLogged, isLogged } = useContext(InventarioContext);
 
@@ -30,7 +30,7 @@ const MainPage = () => {
 
   return (
     <Layout>
-      {!isLogged ? (
+      {!isLogged && !localStorage.getItem("token") ? (
         <Login setIsLogged={setIsLogged} />
       ) : (
         <>

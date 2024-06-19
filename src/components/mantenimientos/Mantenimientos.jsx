@@ -10,7 +10,7 @@ const Mantenimientos = ({ setTitle }) => {
     getAreas();
   }, []);
   const getAreas = async () => {
-    const response = await fetch("http://localhost:3005/api/v1/mantenimientos");
+    const response = await fetch("http://10.30.1.42:8085/api/v1/mantenimientos");
 
     const info = await response.json();
     if (info) setMantenimientos(info.data);

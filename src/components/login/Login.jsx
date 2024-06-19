@@ -20,7 +20,7 @@ const Login = ({  }) => {
   };
 
   const auth = async () => {
-    const response = await fetch(`http://localhost:3005/api/v1/auth`, {
+    const response = await fetch(`http://10.30.1.42:8085/api/v1/auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,6 +34,7 @@ const Login = ({  }) => {
         message: confirm.msg,
       });
       setIsLogged(true);
+      localStorage.setItem("token", confirm.tokenSession)
       navigate("/trabajadores");
     } else {
       notification.error({
