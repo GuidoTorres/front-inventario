@@ -14,7 +14,7 @@ const Areas = ({ setTitle }) => {
     getAreas();
   }, []);
   const getAreas = async () => {
-    const response = await fetch("http://localhost:8085/api/v1/unidad");
+    const response = await fetch("http://localhost:3005/api/v1/unidad");
 
     const info = await response.json();
     if (info) 
@@ -74,7 +74,7 @@ const Areas = ({ setTitle }) => {
   };
 
   const handleDelete = async (id) => {
-    const response = await fetch(`http://localhost:8085/api/v1/unidad/${id}`, {
+    const response = await fetch(`http://localhost:3005/api/v1/unidad/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

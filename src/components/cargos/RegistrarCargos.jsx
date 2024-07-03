@@ -17,7 +17,7 @@ const RegistrarCargos = ({
   };
 
   const getArea = async () => {
-    const response = await fetch("http://localhost:8085/api/v1/unidad");
+    const response = await fetch("http://localhost:3005/api/v1/unidad");
 
     const info = await response.json();
     if (info) setArea(info.data);
