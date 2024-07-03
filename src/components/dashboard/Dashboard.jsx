@@ -14,7 +14,7 @@ const Dashboard = ({ setTitle }) => {
   console.log(equipos.impresoras);
   const getEquipos = async () => {
     const response = await fetch(
-      "http://localhost:3005/api/v1/equipos/estadisticas"
+      "http://10.30.1.43:8085/api/v1/equipos/estadisticas"
     );
 
     const info = await response.json();
