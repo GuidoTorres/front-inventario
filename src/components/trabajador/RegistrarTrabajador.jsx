@@ -28,14 +28,14 @@ const RegistrarTrabajador = ({
   };
 
   const getCargos = async () => {
-    const response = await fetch("http://10.30.1.42:8085/api/v1/cargos");
+    const response = await fetch("http://10.30.1.43:8085/api/v1/cargos");
 
     const info = await response.json();
     if (info) setCargo(info.data);
   };
 
   const getEquipos = async () => {
-    const response = await fetch("http://10.30.1.42:8085/api/v1/equipos/select");
+    const response = await fetch("http://10.30.1.43:8085/api/v1/equipos/select");
 
     const info = await response.json();
     if (info) setEquipo(info.data);
@@ -60,7 +60,7 @@ const RegistrarTrabajador = ({
   const postTrabajador = async () => {
     if (editar) {
       const response = await fetch(
-        `http://10.30.1.42:8085/api/v1/trabajadores/${editar.id}`,
+        `http://10.30.1.43:8085/api/v1/trabajadores/${editar.id}`,
         {
           method: "PUT",
           headers: {
@@ -84,7 +84,7 @@ const RegistrarTrabajador = ({
       }
     } else {
       const response = await fetch(
-        "http://10.30.1.42:8085/api/v1/trabajadores",
+        "http://10.30.1.43:8085/api/v1/trabajadores",
         {
           method: "POST",
           headers: {

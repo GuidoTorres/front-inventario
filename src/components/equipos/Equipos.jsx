@@ -27,7 +27,7 @@ const Equipos = ({ setTitle }) => {
   }, []);
 
   const getEquipos = async () => {
-    const response = await fetch("http://10.30.1.42:8085/api/v1/equipos");
+    const response = await fetch("http://10.30.1.43:8085/api/v1/equipos");
 
     const info = await response.json();
     if (info) setEquipos(info.data);
@@ -102,7 +102,7 @@ const Equipos = ({ setTitle }) => {
     setEditar(val);
   };
   const handleDelete = async (id) => {
-    const response = await fetch(`http://10.30.1.42:8085/api/v1/equipos/${id}`, {
+    const response = await fetch(`http://10.30.1.43:8085/api/v1/equipos/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

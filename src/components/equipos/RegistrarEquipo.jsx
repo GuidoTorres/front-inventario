@@ -136,7 +136,7 @@ const RegistrarEquipo = ({
   }, []);
 
   const getArea = async () => {
-    const response = await fetch("http://10.30.1.42:8085/api/v1/unidad");
+    const response = await fetch("http://10.30.1.43:8085/api/v1/unidad");
 
     const info = await response.json();
     if (info) setArea(info.data);
@@ -144,7 +144,7 @@ const RegistrarEquipo = ({
 
   const getTrabajador = async () => {
     const response = await fetch(
-      "http://10.30.1.42:8085/api/v1/trabajadores/select"
+      "http://10.30.1.43:8085/api/v1/trabajadores/select"
     );
 
     const info = await response.json();
@@ -163,7 +163,7 @@ const RegistrarEquipo = ({
   const postEquipo = async () => {
     if (editar) {
       const response = await fetch(
-        `http://10.30.1.42:8085/api/v1/equipos/${editar.id}`,
+        `http://10.30.1.43:8085/api/v1/equipos/${editar.id}`,
         {
           method: "PUT",
           headers: {
@@ -186,7 +186,7 @@ const RegistrarEquipo = ({
         });
       }
     } else {
-      const response = await fetch("http://10.30.1.42:8085/api/v1/equipos", {
+      const response = await fetch("http://10.30.1.43:8085/api/v1/equipos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

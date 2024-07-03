@@ -20,7 +20,7 @@ const Login = ({  }) => {
   };
 
   const auth = async () => {
-    const response = await fetch(`http://10.30.1.42:8085/api/v1/auth`, {
+    const response = await fetch(`http://10.30.1.43:8085/api/v1/auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
