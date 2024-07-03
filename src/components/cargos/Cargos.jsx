@@ -14,7 +14,7 @@ const Cargos = ({ setTitle }) => {
     getCargos();
   }, []);
   const getCargos = async () => {
-    const response = await fetch("http://10.30.1.43:8085/api/v1/cargos");
+    const response = await fetch("http://localhost:8085/api/v1/cargos");
 
     const info = await response.json();
     if (info) {

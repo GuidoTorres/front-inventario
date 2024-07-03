@@ -16,7 +16,7 @@ const RegistrarAreas = ({
   };
 
   const getBase = async () => {
-    const response = await fetch("http://10.30.1.43:8085/api/v1/base");
+    const response = await fetch("http://localhost:8085/api/v1/base");
 
     const info = await response.json();
     if (info) {
@@ -121,7 +121,7 @@ const RegistrarAreas = ({
   const postArea = async () => {
     if (editar) {
       const response = await fetch(
-        `http://10.30.1.43:8085/api/v1/unidad/${editar.id}`,
+        `http://localhost:8085/api/v1/unidad/${editar.id}`,
         {
           method: "PUT",
           headers: {
@@ -144,7 +144,7 @@ const RegistrarAreas = ({
         });
       }
     } else {
-      const response = await fetch("http://10.30.1.43:8085/api/v1/unidad", {
+      const response = await fetch("http://localhost:8085/api/v1/unidad", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
