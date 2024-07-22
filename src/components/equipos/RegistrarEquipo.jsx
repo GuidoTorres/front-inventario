@@ -343,7 +343,7 @@ const RegistrarEquipo = ({
             ]}
           >
             <Input
-              value={equipo.descripcion}
+              value={equipo.descripcion || undefined}
               onChange={(e) => handleData(e.target.value, "descripcion")}
               className="input-form"
             />

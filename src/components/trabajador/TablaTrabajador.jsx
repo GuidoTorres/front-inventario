@@ -36,25 +36,21 @@ const TablaTrabajador = ({ setTitle }) => {
       align: "center",
       dataIndex: "id",
     },
+
     {
-      title: "Nombres",
+      title: "Trabajador",
       align: "center",
-      dataIndex: "nombres",
-    },
-    {
-      title: "Apellido Paterno",
-      align: "center",
-      dataIndex: "apellido_paterno",
-    },
-    {
-      title: "Apellido Materno",
-      align: "center",
-      dataIndex: "apellido_materno",
+      render: (item) =>
+        item?.nombres +
+        " " +
+        item.apellido_paterno +
+        " " +
+        item.apellido_materno,
     },
     {
       title: "Cargo",
       align: "center",
-      render: (item) => item?.cargo?.nombres,
+      render: (item) => item?.de_func,
     },
     {
       title: "Equipos",
@@ -148,8 +144,8 @@ const TablaTrabajador = ({ setTitle }) => {
           (item) =>
             item.nombres.toLowerCase().includes(value) ||
             item.apellido_paterno.toLowerCase().includes(value) ||
-            item.apellido_materno.toLowerCase().includes(value) ||
-            item.dni.includes(value) // Asumiendo que DNI es numérico o ya está en minúsculas
+            item.apellido_materno.toLowerCase().includes(value) 
+            // item.dni.includes(value) // Asumiendo que DNI es numérico o ya está en minúsculas
         );
         return filter;
       }

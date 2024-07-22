@@ -45,13 +45,13 @@ const Equipos = ({ setTitle }) => {
       align: "center",
     },
     {
-      title: "Marca",
-      dataIndex: "marca",
+      title: "Secuencia",
+      dataIndex: "secuencia",
       align: "center",
     },
     {
-      title: "Tipo",
-      dataIndex: "tipo",
+      title: "Descripción",
+      dataIndex: "descripcion",
       align: "center",
     },
     {

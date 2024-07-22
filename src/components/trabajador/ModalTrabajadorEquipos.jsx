@@ -24,13 +24,13 @@ const ModalTrabajadorEquipos = ({
       align: "center",
     },
     {
-      title: "Marca",
-      dataIndex: "marca",
+      title: "Descripción",
+      dataIndex: "descripcion",
       align: "center",
     },
     {
-      title: "Tipo",
-      dataIndex: "tipo",
+      title: "Modelo",
+      dataIndex: "modelo",
       align: "center",
     },
     {
@@ -84,6 +84,7 @@ const ModalTrabajadorEquipos = ({
       okText={editar ? "Editar" : "Registrar"}
       cancelText={"Cancelar"}
       footer={null}
+      width={800}
     >
       <Table columns={columns} dataSource={editar?.equipos} />
     </Modal>
