@@ -17,7 +17,7 @@ const RegistrarCargos = ({
   };
 
   const getArea = async () => {
-    const response = await fetch("http://10.30.1.43:8085/api/v1/unidad");
+    const response = await fetch(`${process.env.REACT_APP_BASE}/unidad`);
 
     const info = await response.json();
     if (info) setArea(info.data);
@@ -41,7 +41,7 @@ const RegistrarCargos = ({
   const postCargos = async () => {
     if (editar !== undefined) {
       const response = await fetch(
-        `http://10.30.1.43:8085/api/v1/cargos/${editar.id}`,
+        `${process.env.REACT_APP_BASE}/cargos/${editar.id}`,
         {
           method: "PUT",
           headers: {
@@ -64,7 +64,7 @@ const RegistrarCargos = ({
         });
       }
     } else {
-      const response = await fetch("http://10.30.1.43:8085/api/v1/cargos", {
+      const response = await fetch(`${process.env.REACT_APP_BASE}/cargos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

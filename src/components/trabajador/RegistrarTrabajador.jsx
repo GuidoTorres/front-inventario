@@ -18,7 +18,15 @@ const RegistrarTrabajador = ({
   setEditar,
 }) => {
   const [form] = Form.useForm();
-  const [trabajador, setTrabajador] = useState({});
+  const [trabajador, setTrabajador] = useState({
+    apellido_materno: "",
+    apellido_paterno: "",
+    cargo: "",
+    cargo_id: "",
+    codigo: "",
+    estado: "",
+    nombres: ""
+  });
   const [cargo, setCargo] = useState([]);
   const [equipo, setEquipo] = useState([]);
   const closeModal = () => {
@@ -28,14 +36,14 @@ const RegistrarTrabajador = ({
   };
 
   const getCargos = async () => {
-    const response = await fetch("http://10.30.1.43:8085/api/v1/cargos");
+    const response = await fetch(`${process.env.REACT_APP_BASE}/cargos`);
 
     const info = await response.json();
     if (info) setCargo(info.data);
   };
 
   const getEquipos = async () => {
-    const response = await fetch("http://10.30.1.43:8085/api/v1/equipos/select");
+    const response = await fetch(`${process.env.REACT_APP_BASE}/equipos/select`);
 
     const info = await response.json();
     if (info) setEquipo(info.data);
@@ -45,12 +53,12 @@ const RegistrarTrabajador = ({
     getEquipos();
   }, []);
   useEffect(() => {
-    if (editar) {
       setTrabajador(editar);
-      form.setFieldValue(editar);
-    }
+      form.setFieldsValue(editar);
   }, [editar]);
-
+  console.log('====================================');
+  console.log(trabajador);
+  console.log('====================================');
   const handleData = (value, text) => {
     form.setFieldValue((value) => {
       return { ...value, [text]: value };
@@ -60,7 +68,7 @@ const RegistrarTrabajador = ({
   const postTrabajador = async () => {
     if (editar) {
       const response = await fetch(
-        `http://10.30.1.43:8085/api/v1/trabajadores/${editar.id}`,
+        `${process.env.REACT_APP_BASE}/trabajadores/${editar.id}`,
         {
           method: "PUT",
           headers: {
@@ -84,7 +92,7 @@ const RegistrarTrabajador = ({
       }
     } else {
       const response = await fetch(
-        "http://10.30.1.43:8085/api/v1/trabajadores",
+        `${process.env.REACT_APP_BASE}/trabajadores`,
         {
           method: "POST",
           headers: {
@@ -111,7 +119,7 @@ const RegistrarTrabajador = ({
 
   return (
     <Modal
-      title="Registrar Trabajador"
+      title={editar ? "Editar Trabajador" : "Registrar Trabajador"}
       open={isModalOpen}
       onCancel={closeModal}
       okText={editar ? "Editar" : "Registrar"}
@@ -131,7 +139,7 @@ const RegistrarTrabajador = ({
         >
           <Input
             onChange={(e) => handleData(e.target.value, "nombres")}
-            value={trabajador.nombres}
+            value={trabajador?.nombres || undefined}
           />
         </Form.Item>
 
@@ -147,7 +155,7 @@ const RegistrarTrabajador = ({
         >
           <Input
             onChange={(e) => handleData(e.target.value, "apellido_paterno")}
-            value={trabajador.apellido_paterno}
+            value={trabajador?.apellido_paterno || undefined}
           />
         </Form.Item>
         <Form.Item
@@ -162,7 +170,7 @@ const RegistrarTrabajador = ({
         >
           <Input
             onChange={(e) => handleData(e.target.value, "apellido_materno")}
-            value={trabajador.apellido_materno}
+            value={trabajador?.apellido_materno || undefined}
           />
         </Form.Item>
         <Form.Item
@@ -179,7 +187,7 @@ const RegistrarTrabajador = ({
         >
           <Input
             onChange={(e) => handleData(e.target.value, "dni")}
-            value={trabajador.dni}
+            value={trabajador?.dni}
             count={{
               show: true,
               min: 8,

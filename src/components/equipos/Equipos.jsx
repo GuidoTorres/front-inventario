@@ -27,11 +27,12 @@ const Equipos = ({ setTitle }) => {
   }, []);
 
   const getEquipos = async () => {
-    const response = await fetch("http://10.30.1.43:8085/api/v1/equipos");
+    const response = await fetch(`${process.env.REACT_APP_BASE}/equipos`);
 
     const info = await response.json();
     if (info) setEquipos(info.data);
   };
+
 
   const columns = [
     {
@@ -58,16 +59,23 @@ const Equipos = ({ setTitle }) => {
       title: "Estado",
       dataIndex: "estado",
       align: "center",
-      render: (_, { estado }) => (
+      render: (_,record) => (
         <>
-          {estado === "BUENO" || estado === "Bueno" ? (
-            <Tag color="green">{estado}</Tag>
-          ) : estado === "REGULAR" || estado === "Regular" ? (
-            <Tag color="gold">{estado}</Tag>
-          ) : estado === "MALO" || estado === "Malo" ? (
-            <Tag color="red">{estado}</Tag>
-          ) : estado === "NUEVO" || estado === "Nuevo" ? 
-            <Tag color="blue">{estado}</Tag> : null}
+          {record.estado_conserv === "1" || record.estado_conserv === "1" ? (
+            <Tag color="green">Bueno</Tag>
+          ) : record.estado_conserv === "2" || record.estado_conserv === "2" ? (
+            <Tag color="blue">Regular</Tag>
+          ) : record.estado_conserv === "3" || record.estado_conserv === "3" ? (
+            <Tag color="volcano">Malo</Tag>
+          ) : record.estado_conserv === "4" || record.estado_conserv === "4" ? (
+            <Tag color="red">Muy Malo</Tag>
+          ) : record.estado_conserv === "5" || record.estado_conserv === "5" ? (
+            <Tag color="blue">Nuevo</Tag>
+          ) : record.estado_conserv === "6" || record.estado_conserv === "6" ? (
+            <Tag color="purple">Chatarra</Tag>
+          ) : record.estado_conserv === "7" || record.estado_conserv === "7" ? (
+            <Tag color="magenta">RAEE</Tag>
+          ) : null}
         </>
       ),
     },

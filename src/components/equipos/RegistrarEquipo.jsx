@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 
 import "./styles/registrarEquipos.css";
+import dayjs from "dayjs";
 
 const RegistrarEquipo = ({
   isModalOpen,
@@ -19,7 +20,7 @@ const RegistrarEquipo = ({
   setEditar,
 }) => {
   const [form] = Form.useForm();
-  const valoresAqp= [
+  const valoresAqp = [
     {
       value: "Modulo 1",
       label: "Modulo 1",
@@ -68,9 +69,9 @@ const RegistrarEquipo = ({
       value: "Transporte",
       label: "Transporte",
     },
-  ]
+  ];
 
-  const valoresMajes= [
+  const valoresMajes = [
     {
       value: "Sector Majes",
       label: "Sector Majes",
@@ -95,10 +96,10 @@ const RegistrarEquipo = ({
       value: "Rio Arma",
       label: "Rio Arma",
     },
-    
-  ]
+  ];
   const [equipo, setEquipo] = useState({});
   const [area, setArea] = useState([]);
+  const [marcas, setMarcas] = useState([]);
   const [trabajador, setTrabajador] = useState([]);
   const initialValues = {
     sbn: "",
@@ -124,7 +125,13 @@ const RegistrarEquipo = ({
   };
   useEffect(() => {
     if (editar) {
+      const format = {...editar, ingreso: editar.fecha_compra}
       setEquipo(editar);
+      form.setFieldsValue(format);
+      console.log("====================================");
+      console.log(format);
+      console.log(dayjs(editar.fecha_compra).format("YYYY"));
+      console.log("====================================");
     } else {
       setEquipo(initialValues);
     }
@@ -133,18 +140,25 @@ const RegistrarEquipo = ({
   useEffect(() => {
     getArea();
     getTrabajador();
+    getMarcas();
   }, []);
 
   const getArea = async () => {
-    const response = await fetch("http://10.30.1.43:8085/api/v1/unidad");
+    const response = await fetch(`${process.env.REACT_APP_BASE}/unidad`);
 
     const info = await response.json();
     if (info) setArea(info.data);
   };
+  const getMarcas = async () => {
+    const response = await fetch(`${process.env.REACT_APP_BASE}/marcas`);
+
+    const info = await response.json();
+    if (info) setMarcas(info.data);
+  };
 
   const getTrabajador = async () => {
     const response = await fetch(
-      "http://10.30.1.43:8085/api/v1/trabajadores/select"
+      `${process.env.REACT_APP_BASE}/trabajadores/select`
     );
 
     const info = await response.json();
@@ -163,7 +177,7 @@ const RegistrarEquipo = ({
   const postEquipo = async () => {
     if (editar) {
       const response = await fetch(
-        `http://10.30.1.43:8085/api/v1/equipos/${editar.id}`,
+        `${process.env.REACT_APP_BASE}/equipos/${editar.id}`,
         {
           method: "PUT",
           headers: {
@@ -186,7 +200,7 @@ const RegistrarEquipo = ({
         });
       }
     } else {
-      const response = await fetch("http://10.30.1.43:8085/api/v1/equipos", {
+      const response = await fetch(`${process.env.REACT_APP_BASE}/equipos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -209,12 +223,16 @@ const RegistrarEquipo = ({
     }
   };
 
-  console.log(editar);
   return (
     <Modal
       title={
+        !editar ?
         <Typography.Title level={5} className="title">
           Registrar equipo
+        </Typography.Title>
+        :
+        <Typography.Title level={5} className="title">
+          Editar equipo
         </Typography.Title>
       }
       open={isModalOpen}
@@ -359,10 +377,17 @@ const RegistrarEquipo = ({
               },
             ]}
           >
-            <Input
-              value={equipo.marca}
-              onChange={(e) => handleData(e.target.value, "marca")}
+            <Select
               className="input-form"
+              value={equipo.marca}
+              onChange={(e) => handleData(e, "modulo")}
+              allowClear
+              options={marcas.map((item) => {
+                return {
+                  value: item.marca.toString(),
+                  label: item.nombre,
+                };
+              })}
             />
           </Form.Item>
         </div>
@@ -393,16 +418,32 @@ const RegistrarEquipo = ({
               allowClear
               options={[
                 {
-                  value: "Bueno",
+                  value: "1",
                   label: "Bueno",
                 },
                 {
-                  value: "Regular",
+                  value: "2",
                   label: "Regular",
                 },
                 {
-                  value: "Malo",
+                  value: "3",
                   label: "Malo",
+                },
+                {
+                  value: "4",
+                  label: "Muy Malo",
+                },
+                {
+                  value: "5",
+                  label: "Nuevo",
+                },
+                {
+                  value: "6",
+                  label: "Chatarra",
+                },
+                {
+                  value: "7",
+                  label: "RAEE",
                 },
               ]}
             />
@@ -419,7 +460,7 @@ const RegistrarEquipo = ({
             ]}
           >
             <Input
-              value={equipo.ingreso}
+              value={dayjs(editar.fecha_compra).format("YYYY")|| undefined}
               onChange={(e) => handleData(e.target.value, "ingreso")}
               className="input-form"
             />
@@ -440,7 +481,7 @@ const RegistrarEquipo = ({
           >
             <Select
               className="input-form"
-              value={equipo.sector}
+              value={equipo.sector || undefined}
               onChange={(e) => handleData(e, "sector")}
               allowClear
               options={[
@@ -471,8 +512,13 @@ const RegistrarEquipo = ({
               value={equipo.modulo}
               onChange={(e) => handleData(e, "modulo")}
               allowClear
-              options={equipo.sector === "Cayma" ? valoresAqp : equipo.sector === "Majes" ? valoresMajes : null}
-
+              options={
+                equipo.sector === "Cayma"
+                  ? valoresAqp
+                  : equipo.sector === "Majes"
+                  ? valoresMajes
+                  : null
+              }
             />
           </Form.Item>
         </div>
@@ -601,16 +647,32 @@ const RegistrarEquipo = ({
                   }
                   options={[
                     {
-                      value: "Bueno",
+                      value: "1",
                       label: "Bueno",
                     },
                     {
-                      value: "Regular",
+                      value: "2",
                       label: "Regular",
                     },
                     {
-                      value: "Malo",
+                      value: "3",
                       label: "Malo",
+                    },
+                    {
+                      value: "4",
+                      label: "Muy Malo",
+                    },
+                    {
+                      value: "5",
+                      label: "Nuevo",
+                    },
+                    {
+                      value: "6",
+                      label: "Chatarra",
+                    },
+                    {
+                      value: "7",
+                      label: "RAEE",
                     },
                   ]}
                 />
@@ -654,7 +716,7 @@ const RegistrarEquipo = ({
                   options={trabajador.map((item) => {
                     return {
                       label: item.nombre,
-                      value: item.id,
+                      value: parseInt(item.id),
                     };
                   })}
                 />
@@ -730,7 +792,12 @@ const RegistrarEquipo = ({
                   value={equipo.trabajador_id || undefined}
                   onChange={(e) => handleData(e, "trabajador_id")}
                   allowClear
-                  options={trabajador.map((item) => item)}
+                  options={trabajador.map((item) => {
+                    return {
+                      value: item.id,
+                      label: item.nombre,
+                    };
+                  })}
                 />
               </Form.Item>
               <div className="flex-content"></div>

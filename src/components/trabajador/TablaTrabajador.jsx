@@ -1,4 +1,4 @@
-import { Button, Flex, Popconfirm, Table, notification } from "antd";
+import { Button, Flex, Popconfirm, Table, notification, Switch } from "antd";
 import React, { useEffect, useState } from "react";
 import RegistrarTrabajador from "./RegistrarTrabajador";
 import {
@@ -22,8 +22,7 @@ const TablaTrabajador = ({ setTitle }) => {
   }, []);
 
   const getTrabajadores = async () => {
-    const response = await fetch("http://10.30.1.43:8085/api/v1/trabajadores");
-
+    const response = await fetch(`${process.env.REACT_APP_BASE}/trabajadores`);
     const info = await response.json();
     if (info) {
       setTrabajadores(info.data);
@@ -71,6 +70,16 @@ const TablaTrabajador = ({ setTitle }) => {
       ),
     },
     {
+      title: "Estado",
+      align: "center",
+      key: "action",
+      render: (_, record) => (
+        <Flex align="center" justify="center" gap={2}>
+          <Switch checked={record.estado} onChange={() =>handleEstado(record.id)}/>{" "}
+        </Flex>
+      ),
+    },
+    {
       title: "Acciones",
       align: "center",
       key: "action",
@@ -98,7 +107,7 @@ const TablaTrabajador = ({ setTitle }) => {
 
   const handleDelete = async (id) => {
     const response = await fetch(
-      `http://10.30.1.43:8085/api/v1/trabajadores/${id}`,
+      `${process.env.REACT_APP_BASE}/trabajadores/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -120,12 +129,32 @@ const TablaTrabajador = ({ setTitle }) => {
     }
   };
 
+  const handleEstado = async (id) => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE}/trabajadores/estado/${id}`,
+      {
+        method: "GET",
+      }
+    );
+    const confirm = await response.json();
+
+    if (response.status === 200) {
+      notification.success({
+        message: confirm.msg,
+      });
+      getTrabajadores();
+    } else {
+      notification.error({
+        message: confirm.msg,
+      });
+    }
+  };
+
   const handleEdit = (data) => {
     setIsModalOpen(true);
     setEditar(data);
   };
   const handleEquipos = (data) => {
-    console.log("pokemon");
     setIsModalOpen2(true);
     setEditar(data);
   };
@@ -144,8 +173,8 @@ const TablaTrabajador = ({ setTitle }) => {
           (item) =>
             item.nombres.toLowerCase().includes(value) ||
             item.apellido_paterno.toLowerCase().includes(value) ||
-            item.apellido_materno.toLowerCase().includes(value) 
-            // item.dni.includes(value) // Asumiendo que DNI es numérico o ya está en minúsculas
+            item.apellido_materno.toLowerCase().includes(value)
+          // item.dni.includes(value) // Asumiendo que DNI es numérico o ya está en minúsculas
         );
         return filter;
       }

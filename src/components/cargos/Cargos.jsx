@@ -14,7 +14,7 @@ const Cargos = ({ setTitle }) => {
     getCargos();
   }, []);
   const getCargos = async () => {
-    const response = await fetch("http://10.30.1.43:8085/api/v1/cargos");
+    const response = await fetch(`${process.env.REACT_APP_BASE}/cargos`);
 
     const info = await response.json();
     if (info) {
@@ -83,7 +83,7 @@ const Cargos = ({ setTitle }) => {
   };
 
   const handleDelete = async (id) => {
-    const response = await fetch(`http://10.30.1.43:8085/api/v1/cargos/${id}`, {
+    const response = await fetch(`${process.env.REACT_APP_BASE}/cargos/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

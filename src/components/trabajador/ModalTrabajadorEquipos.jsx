@@ -13,11 +13,11 @@ const ModalTrabajadorEquipos = ({
     setEditar();
   };
   const columns = [
-    // {
-    //   title: "Nro",
-    //   dataIndex: "nro",
-    //   align: "center",
-    // },
+    {
+      title: "Id",
+      dataIndex: "id",
+      align: "center",
+    },
     {
       title: "SBN",
       dataIndex: "sbn",
@@ -37,16 +37,22 @@ const ModalTrabajadorEquipos = ({
       title: "Estado",
       dataIndex: "estado",
       align: "center",
-      render: (_, { estado }) => (
+      render: (_,record) => (
         <>
-          {estado === "BUENO" || estado === "Bueno" ? (
-            <Tag color="green">{estado}</Tag>
-          ) : estado === "REGULAR" || estado === "Regular" ? (
-            <Tag color="gold">{estado}</Tag>
-          ) : estado === "MALO" || estado === "Malo" ? (
-            <Tag color="red">{estado}</Tag>
-          ) : estado === "NUEVO" || estado === "Nuevo" ? (
-            <Tag color="blue">{estado}</Tag>
+          {record.estado_conserv === "1" || record.estado_conserv === "1" ? (
+            <Tag color="green">Bueno</Tag>
+          ) : record.estado_conserv === "2" || record.estado_conserv === "2" ? (
+            <Tag color="blue">Regular</Tag>
+          ) : record.estado_conserv === "3" || record.estado_conserv === "3" ? (
+            <Tag color="red">Malo</Tag>
+          ) : record.estado_conserv === "4" || record.estado_conserv === "4" ? (
+            <Tag color="volcano">Muy Malo</Tag>
+          ) : record.estado_conserv === "5" || record.estado_conserv === "5" ? (
+            <Tag color="blue">Nuevo</Tag>
+          ) : record.estado_conserv === "6" || record.estado_conserv === "6" ? (
+            <Tag color="purple">Chatarra</Tag>
+          ) : record.estado_conserv === "7" || record.estado_conserv === "7" ? (
+            <Tag color="magenta">RAEE</Tag>
           ) : null}
         </>
       ),
@@ -78,7 +84,7 @@ const ModalTrabajadorEquipos = ({
   ];
   return (
     <Modal
-      title="Equipos"
+      title={`Equipos`}
       open={isModalOpen}
       onCancel={closeModal}
       okText={editar ? "Editar" : "Registrar"}
@@ -86,6 +92,7 @@ const ModalTrabajadorEquipos = ({
       footer={null}
       width={800}
     >
+      <label htmlFor=""> <strong>Total: </strong>{editar.equipos.length}</label>
       <Table columns={columns} dataSource={editar?.equipos} />
     </Modal>
   );
