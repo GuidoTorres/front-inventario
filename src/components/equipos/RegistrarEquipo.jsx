@@ -379,10 +379,10 @@ const RegistrarEquipo = ({
           >
             <Select
               className="input-form"
-              value={equipo.marca}
+              value={equipo.marca || undefined}
               onChange={(e) => handleData(e, "modulo")}
               allowClear
-              options={marcas.map((item) => {
+              options={marcas?.map((item) => {
                 return {
                   value: item.marca.toString(),
                   label: item.nombre,
