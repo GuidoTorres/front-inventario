@@ -65,9 +65,9 @@ const MainPage = () => {
                   path="/equipos"
                   element={<ProtectedRoute><Equipos setTitle={setTitle} /></ProtectedRoute>}
                 />
-                <Route path="/unidad" element={<ProtectedRoute><Areas setTitle={setTitle} /></ProtectedRoute>} />
+                <Route path="/subdependencias" element={<ProtectedRoute><Areas setTitle={setTitle} /></ProtectedRoute>} />
                 <Route
-                  path="/cargos"
+                  path="/dependencias"
                   element={<ProtectedRoute><Cargos setTitle={setTitle} /></ProtectedRoute>}
                 />
                 {/* <Route

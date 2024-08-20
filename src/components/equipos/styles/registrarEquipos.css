@@ -18,3 +18,13 @@
 .title{
     margin-top: 8px;
 }
+
+.flex-pc{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.flex-content-pc{
+  width: 100%;
+  margin-bottom: 4px;
+}

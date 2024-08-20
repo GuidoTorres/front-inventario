@@ -11,6 +11,10 @@ import React, { useEffect, useState } from "react";
 
 import "./styles/registrarEquipos.css";
 import dayjs from "dayjs";
+import ImpresoraForm from "./ImpresoraForm";
+import Perifericos from "./Perifericos";
+import ComputadoraForm from "./ComputadoraForm";
+import MonitorForm from "./MonitorForm";
 
 const RegistrarEquipo = ({
   isModalOpen,
@@ -98,8 +102,11 @@ const RegistrarEquipo = ({
     },
   ];
   const [equipo, setEquipo] = useState({});
-  const [area, setArea] = useState([]);
+  const [sedes, setSedes] = useState([]);
   const [marcas, setMarcas] = useState([]);
+  const [area, setArea] = useState([]);
+  const [oficina, setOficina] = useState([]);
+  const [modulos, setModulos] = useState([]);
   const [trabajador, setTrabajador] = useState([]);
   const initialValues = {
     sbn: "",
@@ -125,35 +132,54 @@ const RegistrarEquipo = ({
   };
   useEffect(() => {
     if (editar) {
-      const format = {...editar, ingreso: editar.fecha_compra}
-      setEquipo(editar);
+      const format = { ...editar, ingreso: dayjs(editar.fecha_ingreso).format("YYYY") };
+      setEquipo(format);
       form.setFieldsValue(format);
-      console.log("====================================");
-      console.log(format);
-      console.log(dayjs(editar.fecha_compra).format("YYYY"));
-      console.log("====================================");
     } else {
       setEquipo(initialValues);
     }
   }, [editar]);
 
   useEffect(() => {
-    getArea();
+    getSedes();
     getTrabajador();
-    getMarcas();
+    getModulos();
+    getAreas();
+    getOficinas();
   }, []);
 
-  const getArea = async () => {
-    const response = await fetch(`${process.env.REACT_APP_BASE}/unidad`);
+  console.log("====================================");
+  console.log(equipo);
+  console.log("====================================");
+
+  const getSedes = async () => {
+    const response = await fetch(`${process.env.REACT_APP_BASE}/sedes`);
+
+    const info = await response.json();
+    if (info) setSedes(info.data);
+  };
+  const getModulos = async () => {
+    const response = await fetch(`${process.env.REACT_APP_BASE}/modulos`);
+
+    const info = await response.json();
+    if (info) setModulos(info.data);
+  };
+
+  const getAreas = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE}/dependencia/select`
+    );
 
     const info = await response.json();
     if (info) setArea(info.data);
   };
-  const getMarcas = async () => {
-    const response = await fetch(`${process.env.REACT_APP_BASE}/marcas`);
+  const getOficinas = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE}/subdependencias/select`
+    );
 
     const info = await response.json();
-    if (info) setMarcas(info.data);
+    if (info) setOficina(info.data);
   };
 
   const getTrabajador = async () => {
@@ -226,18 +252,20 @@ const RegistrarEquipo = ({
   return (
     <Modal
       title={
-        !editar ?
-        <Typography.Title level={5} className="title">
-          Registrar equipo
-        </Typography.Title>
-        :
-        <Typography.Title level={5} className="title">
-          Editar equipo
-        </Typography.Title>
+        !editar ? (
+          <Typography.Title level={5} className="title">
+            Registrar equipo
+          </Typography.Title>
+        ) : (
+          <Typography.Title level={5} className="title">
+            Editar equipo
+          </Typography.Title>
+        )
       }
       open={isModalOpen}
       onCancel={closeModal}
       footer={null}
+      width={equipo.tipo === "Cpu" || equipo.tipo === "Laptop" ? "50%" : "40%"}
     >
       <Form form={form} layout="vertical" onFinish={postEquipo}>
         <div className="flex">
@@ -258,6 +286,7 @@ const RegistrarEquipo = ({
               onChange={(e) => handleData(e, "tipo")}
               showSearch
               optionFilterProp="children"
+              popupMatchSelectWidth={false}
               filterOption={(input, option) =>
                 (option?.label ?? "")
                   .toLowerCase()
@@ -311,6 +340,10 @@ const RegistrarEquipo = ({
                   label: "Switch",
                 },
                 {
+                  value: "Scanner",
+                  label: "Scanner",
+                },
+                {
                   value: "Router",
                   label: "Router",
                 },
@@ -351,6 +384,134 @@ const RegistrarEquipo = ({
         <div className="flex">
           <Form.Item
             className="flex-content"
+            label="Sede"
+            name="sede"
+            rules={[
+              {
+                required: true,
+                message: "Campo obligatorio.",
+              },
+            ]}
+          >
+            <Select
+              className="input-form"
+              value={equipo.sede}
+              onChange={(e) => handleData(e, "sede_id")}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              allowClear
+              options={sedes?.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.nombre,
+                };
+              })}
+            />
+          </Form.Item>
+          <Form.Item
+            className="flex-content"
+            label="Modulo"
+            name="modulo"
+            rules={[
+              {
+                required: false,
+                message: "Campo obligatorio.",
+              },
+            ]}
+          >
+            <Select
+              className="input-form"
+              value={equipo.modulo_id}
+              onChange={(e) => handleData(e, "modulo_id")}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              allowClear
+              options={modulos?.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.nombre,
+                };
+              })}
+            />
+          </Form.Item>
+        </div>
+        <div className="flex">
+          <Form.Item
+            className="flex-content"
+            label="Área"
+            name="area"
+            rules={[
+              {
+                required: false,
+                message: "Campo obligatorio.",
+              },
+            ]}
+          >
+            <Select
+              className="input-form"
+              value={equipo.dependencia_id}
+              onChange={(e) => handleData(e, "dependencia_id")}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              allowClear
+              options={area?.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.nombre,
+                };
+              })}
+            />
+          </Form.Item>
+          <Form.Item
+            className="flex-content"
+            label="Oficina"
+            name="oficina"
+            rules={[
+              {
+                required: false,
+                message: "Campo obligatorio.",
+              },
+            ]}
+          >
+            <Select
+              className="input-form"
+              value={equipo.sub_dependencia_id}
+              onChange={(e) => handleData(e, "sub_dependencia_id")}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              allowClear
+              options={oficina?.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.nombre,
+                };
+              })}
+            />
+          </Form.Item>
+        </div>
+        <div className="flex">
+          <Form.Item
+            className="flex-content"
             label="Descripción"
             name="descripcion"
             rules={[
@@ -372,26 +533,54 @@ const RegistrarEquipo = ({
             name="marca"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Campo obligatorio.",
               },
             ]}
           >
-            <Select
-              className="input-form"
+            <Input
               value={equipo.marca || undefined}
-              onChange={(e) => handleData(e, "modulo")}
-              allowClear
-              options={marcas?.map((item) => {
-                return {
-                  value: item.marca.toString(),
-                  label: item.nombre,
-                };
-              })}
+              onChange={(e) => handleData(e.target.value, "marca")}
+              className="input-form"
             />
           </Form.Item>
         </div>
-
+        <div className="flex">
+          <Form.Item
+            className="flex-content"
+            label="Modelo"
+            name="modelo"
+            rules={[
+              {
+                required: false,
+                message: "Campo obligatorio.",
+              },
+            ]}
+          >
+            <Input
+              value={equipo.modelo || undefined}
+              onChange={(e) => handleData(e.target.value, "modelo")}
+              className="input-form"
+            />
+          </Form.Item>
+          <Form.Item
+            className="flex-content"
+            label="Proveedor"
+            name="proveedor"
+            rules={[
+              {
+                required: false,
+                message: "Campo obligatorio.",
+              },
+            ]}
+          >
+            <Input
+              value={equipo.proveedor || undefined}
+              onChange={(e) => handleData(e.target.value, "proveedor")}
+              className="input-form"
+            />
+          </Form.Item>
+        </div>
         <div className="flex">
           <Form.Item
             className="flex-content"
@@ -399,7 +588,7 @@ const RegistrarEquipo = ({
             name="estado"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Campo obligatorio.",
               },
             ]}
@@ -454,361 +643,80 @@ const RegistrarEquipo = ({
             name="ingreso"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Campo obligatorio.",
               },
             ]}
           >
             <Input
-              value={dayjs(editar.fecha_compra).format("YYYY")|| undefined}
+              value={dayjs(editar?.ingreso).format("YYYY-MM-DD") || undefined}
               onChange={(e) => handleData(e.target.value, "ingreso")}
               className="input-form"
             />
           </Form.Item>
         </div>
 
-        <div className="flex">
-          <Form.Item
-            className="flex-content"
-            label="Sector"
-            name="sector"
-            rules={[
-              {
-                required: false,
-                message: "Campo obligatorio.",
-              },
-            ]}
-          >
-            <Select
-              className="input-form"
-              value={equipo.sector || undefined}
-              onChange={(e) => handleData(e, "sector")}
-              allowClear
-              options={[
-                {
-                  value: "Cayma",
-                  label: "Cayma",
-                },
-                {
-                  value: "Majes",
-                  label: "Majes",
-                },
-              ]}
+        {equipo.tipo === "Impresora" || equipo.tipo === "Scanner" ? (
+          <ImpresoraForm
+            equipo={equipo}
+            editar={editar}
+            handleData={handleData}
+            sedes={sedes}
+            modulos={modulos}
+            area={area}
+            oficina={oficina}
+            trabajador={trabajador}
+          />
+        ) : null}
+
+        {equipo.tipo !== "Monitor" &&
+          equipo.tipo !== "Impresora" &&
+          equipo.tipo !== "Scanner" &&
+          equipo.tipo !== "Cpu" &&
+          equipo.tipo !== "Laptop" && (
+            <Perifericos
+              equipo={equipo}
+              editar={editar}
+              handleData={handleData}
+              sedes={sedes}
+              modulos={modulos}
+              area={area}
+              oficina={oficina}
+              trabajador={trabajador}
             />
-          </Form.Item>
-          <Form.Item
-            className="flex-content"
-            label="Modulo"
-            name="modulo"
-            rules={[
-              {
-                required: false,
-                message: "Campo obligatorio.",
-              },
-            ]}
-          >
-            <Select
-              className="input-form"
-              value={equipo.modulo}
-              onChange={(e) => handleData(e, "modulo")}
-              allowClear
-              options={
-                equipo.sector === "Cayma"
-                  ? valoresAqp
-                  : equipo.sector === "Majes"
-                  ? valoresMajes
-                  : null
-              }
-            />
-          </Form.Item>
-        </div>
-        {equipo.tipo === "Cpu" ||
-        equipo.tipo === "Laptop" ||
-        equipo.tipo === "pc escritorio" ? (
-          <>
-            <div className="flex">
-              <Form.Item
-                className="flex-content"
-                label="Procesador"
-                name="procesador"
-                rules={[
-                  {
-                    required: false,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Input
-                  value={equipo.procesador}
-                  onChange={(e) => handleData(e, "procesador")}
-                  className="input-form"
-                />
-              </Form.Item>
-              <Form.Item
-                className="flex-content"
-                label="Disco duro"
-                name="disco_duro"
-                rules={[
-                  {
-                    required: false,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Input
-                  style={{ width: "100%" }}
-                  value={equipo.disco_duro}
-                  onChange={(e) => handleData(e.target.value, "disco_duro")}
-                  className="input-form"
-                />
-              </Form.Item>
-            </div>
+          )}
 
-            <div className="flex">
-              <Form.Item
-                className="flex-content"
-                label="Capacidad"
-                name="capacidad"
-                rules={[
-                  {
-                    required: false,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Input
-                  style={{ width: "100%" }}
-                  value={equipo.capacidad}
-                  onChange={(e) => handleData(e.target.value, "capacidad")}
-                  className="input-form"
-                />
-              </Form.Item>
+        {equipo.tipo === "Cpu" || equipo.tipo === "Laptop" ? (
+          <ComputadoraForm
+            equipo={equipo}
+            editar={editar}
+            handleData={handleData}
+            sedes={sedes}
+            modulos={modulos}
+            area={area}
+            oficina={oficina}
+            trabajador={trabajador}
+          />
+        ) : null}
 
-              <Form.Item
-                className="flex-content"
-                label="Memoria"
-                name="memoria"
-                rules={[
-                  {
-                    required: false,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Input
-                  style={{ width: "100%" }}
-                  value={equipo.memoria}
-                  onChange={(e) => handleData(e.target.value, "memoria")}
-                  className="input-form"
-                />
-              </Form.Item>
-            </div>
+        {equipo.tipo === "Monitor" ? (
+          <MonitorForm
+            equipo={equipo}
+            editar={editar}
+            handleData={handleData}
+            sedes={sedes}
+            modulos={modulos}
+            area={area}
+            oficina={oficina}
+            trabajador={trabajador}
+          />
+        ) : null}
 
-            <div className="flex">
-              <Form.Item
-                className="flex-content"
-                label="Tarjeta de video"
-                name="tarjeta_video"
-                rules={[
-                  {
-                    required: false,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Input
-                  style={{ width: "100%" }}
-                  value={equipo.tarjeta_video}
-                  onChange={(e) => handleData(e.target.value, "tarjeta_video")}
-                  className="input-form"
-                />
-              </Form.Item>
-              <Form.Item
-                className="flex-content"
-                label="Estado"
-                name="estado"
-                rules={[
-                  {
-                    required: true,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Select
-                  className="input-form"
-                  value={equipo.estado}
-                  onChange={(e) => handleData(e, "estado")}
-                  showSearch
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={[
-                    {
-                      value: "1",
-                      label: "Bueno",
-                    },
-                    {
-                      value: "2",
-                      label: "Regular",
-                    },
-                    {
-                      value: "3",
-                      label: "Malo",
-                    },
-                    {
-                      value: "4",
-                      label: "Muy Malo",
-                    },
-                    {
-                      value: "5",
-                      label: "Nuevo",
-                    },
-                    {
-                      value: "6",
-                      label: "Chatarra",
-                    },
-                    {
-                      value: "7",
-                      label: "RAEE",
-                    },
-                  ]}
-                />
-              </Form.Item>
-            </div>
-
-            <div className="flex">
-              <Form.Item
-                className="flex-content"
-                label="Proveedor (RUC)"
-                name="proveedor"
-                rules={[
-                  {
-                    required: false,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Input
-                  value={equipo.proveedor}
-                  onChange={(e) => handleData(e.target.value, "proveedor")}
-                  className="input-form"
-                />
-              </Form.Item>
-              <Form.Item
-                className="flex-content"
-                label="Encargado"
-                name="encargado"
-                rules={[
-                  {
-                    required: true,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Select
-                  className="input-form"
-                  value={equipo.trabajador_id}
-                  onChange={(e) => handleData(e, "trabajador_id")}
-                  allowClear
-                  options={trabajador.map((item) => {
-                    return {
-                      label: item.nombre,
-                      value: parseInt(item.id),
-                    };
-                  })}
-                />
-              </Form.Item>
-            </div>
-            <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button htmlType="submit" type="primary">
-                {editar ? "Editar" : "Registrar"}
-              </Button>
-            </Form.Item>
-          </>
-        ) : (
-          <>
-            <div className="flex">
-              <Form.Item
-                className="flex-content"
-                label="Unidad"
-                name="unidad"
-                rules={[
-                  {
-                    required: false,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Select
-                  className="input-form"
-                  value={equipo.area}
-                  popupMatchSelectWidth={false}
-                  onChange={(e) => handleData(e, "area")}
-                  allowClear
-                  options={area.map((item) => {
-                    return {
-                      label: item.nombres,
-                      value: item.nombres,
-                    };
-                  })}
-                />
-              </Form.Item>
-              <Form.Item
-                className="flex-content"
-                label="Proveedor"
-                name="proveedor"
-                rules={[
-                  {
-                    required: false,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Input
-                  value={equipo.proveedor}
-                  onChange={(e) => handleData(e.target.value, "proveedor")}
-                  className="input-form"
-                />
-              </Form.Item>
-            </div>
-
-            <div className="flex">
-              <Form.Item
-                className="flex-content"
-                label="Encargado"
-                name="encargado"
-                rules={[
-                  {
-                    required: true,
-                    message: "Campo obligatorio.",
-                  },
-                ]}
-              >
-                <Select
-                  className="input-form"
-                  value={equipo.trabajador_id || undefined}
-                  onChange={(e) => handleData(e, "trabajador_id")}
-                  allowClear
-                  options={trabajador.map((item) => {
-                    return {
-                      value: item.id,
-                      label: item.nombre,
-                    };
-                  })}
-                />
-              </Form.Item>
-              <div className="flex-content"></div>
-            </div>
-            <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button htmlType="submit" type="primary">
-                {editar ? "Editar" : "Registrar"}
-              </Button>
-            </Form.Item>
-          </>
-        )}
+        <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button htmlType="submit" type="primary">
+            {editar ? "Editar" : "Registrar"}
+          </Button>
+        </Form.Item>
       </Form>
     </Modal>
   );

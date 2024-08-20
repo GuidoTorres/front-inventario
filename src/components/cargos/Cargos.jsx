@@ -10,11 +10,11 @@ const Cargos = ({ setTitle }) => {
   const [editar, setEditar] = useState();
   const [search, setSearch] = useState([]);
   useEffect(() => {
-    setTitle("Cargos");
+    setTitle("Dependencias");
     getCargos();
   }, []);
   const getCargos = async () => {
-    const response = await fetch(`${process.env.REACT_APP_BASE}/cargos`);
+    const response = await fetch(`${process.env.REACT_APP_BASE}/dependencia`);
 
     const info = await response.json();
     if (info) {
@@ -29,8 +29,13 @@ const Cargos = ({ setTitle }) => {
       align: "center",
     },
     {
-      title: "Cargo",
-      dataIndex: "nombres",
+      title: "Sede",
+      render: (_, record) => record?.sede?.nombre,
+      align: "center",
+    },
+    {
+      title: "Nombre",
+      dataIndex: "nombre",
       align: "center",
     },
     // {
@@ -39,8 +44,8 @@ const Cargos = ({ setTitle }) => {
     //   align: "center",
     // },
     {
-      title: "Unidad",
-      render: (item) => item?.unidad?.nombres,
+      title: "Modulo",
+      render: (item) => item?.modulo?.nombre,
       align: "center",
     },
     // {
@@ -76,6 +81,7 @@ const Cargos = ({ setTitle }) => {
       ),
     },
   ];
+
 
   const handleEdit = (val) => {
     setIsModalOpen(true);
@@ -150,7 +156,12 @@ const Cargos = ({ setTitle }) => {
           <Button onClick={() => setIsModalOpen(true)}>Registrar</Button>
         </div>
       </div>
-      <Table columns={columns} dataSource={search} />;
+      <Table
+        columns={columns}
+        dataSource={search}
+
+      />
+      ;
       {isModalOpen && (
         <RegistrarCargos
           isModalOpen={isModalOpen}

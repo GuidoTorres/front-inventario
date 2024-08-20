@@ -11,7 +11,6 @@ import {
 import RegistrarEquipo from "./RegistrarEquipo";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
-import { convertLegacyProps } from "antd/es/button";
 const Equipos = ({ setTitle }) => {
   const [equipos, setEquipos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -104,6 +103,7 @@ const Equipos = ({ setTitle }) => {
       ),
     },
   ];
+  
 
   const handleEdit = (val) => {
     setIsModalOpen(true);
@@ -141,7 +141,8 @@ const Equipos = ({ setTitle }) => {
           const coincideBuscar =
             buscar
               ? item?.sbn?.toLowerCase().includes(buscar?.toLowerCase()) ||
-                item?.marca?.toLowerCase().includes(buscar?.toLowerCase())
+                item?.marca?.toLowerCase().includes(buscar?.toLowerCase()) ||
+                item?.descripcion?.toLowerCase().includes(buscar?.toLowerCase())
               : true;
           const coincideTipo =
             tipo ? item?.tipo?.toLowerCase() === tipo?.toLowerCase() : true;
@@ -278,20 +279,32 @@ const Equipos = ({ setTitle }) => {
             allowClear
             options={[
               {
-                value: "nuevo",
-                label: "Nuevo",
-              },
-              {
-                value: "bueno",
+                value: "1",
                 label: "Bueno",
               },
               {
-                value: "regular",
+                value: "2",
                 label: "Regular",
               },
               {
-                value: "malo",
+                value: "3",
                 label: "Malo",
+              },
+              {
+                value: "4",
+                label: "Muy Malo",
+              },
+              {
+                value: "5",
+                label: "Nuevo",
+              },
+              {
+                value: "6",
+                label: "Chatarra",
+              },
+              {
+                value: "7",
+                label: "RAEE",
               },
             ]}
           />

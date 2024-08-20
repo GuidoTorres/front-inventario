@@ -8,18 +8,21 @@ const Areas = ({ setTitle }) => {
   const [areas, setAreas] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editar, setEditar] = useState();
-  const [search, setSearch] = useState()
+  const [search, setSearch] = useState();
   useEffect(() => {
-    setTitle("Unidades");
+    setTitle("Sub Dependencias");
     getAreas();
   }, []);
   const getAreas = async () => {
-    const response = await fetch(`${process.env.REACT_APP_BASE}/unidad`);
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE}/subdependencias`
+    );
 
     const info = await response.json();
-    if (info) 
-   { setAreas(info.data);
-    setSearch(info.data)}
+    if (info) {
+      setAreas(info.data);
+      setSearch(info.data);
+    }
   };
   const columns = [
     {
@@ -28,20 +31,26 @@ const Areas = ({ setTitle }) => {
       align: "center",
     },
     {
-      title: "Nombre",
-      dataIndex: "nombres",
+      title: "Sede",
+      render: (_, record) => record?.sede?.nombre,
       align: "center",
     },
     {
-      title: "Descripción",
-      dataIndex: "descripcion",
+      title: "Depedencia",
+      render: (_, record) => record?.dependencia?.nombre,
+      align: "center",
+    },
+    {
+      title: "Nombre",
+      dataIndex: "nombre",
       align: "center",
     },
     {
       title: "Modulo",
-      dataIndex: "modulo",
+      render: (_, record) => record?.modulo?.nombre,
       align: "center",
     },
+
     {
       title: "Acciones",
       align: "center",
@@ -113,7 +122,8 @@ const Areas = ({ setTitle }) => {
       }
     };
     setSearch(filterData());
-  };  return (
+  };
+  return (
     <>
       <div
         style={{

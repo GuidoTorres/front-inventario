@@ -45,8 +45,8 @@ const Sidebar = () => {
         items={[
           { key: "/trabajadores", icon: <UserOutlined />, label: "Trabajadores" },
           { key: "/equipos", icon: <LaptopOutlined />, label: "Equipos" },
-          { key: "/unidad", icon: <ApartmentOutlined />, label: "Unidad" },
-          { key: "/cargos", icon: <SolutionOutlined />, label: "Cargos" },
+          { key: "/dependencias", icon: <SolutionOutlined />, label: "Dependencias" },
+          { key: "/subdependencias", icon: <ApartmentOutlined />, label: "Sub Dependencias" },
           // { key: "/mantenimiento", icon: <ToolOutlined />, label: "Mantenimiento" },
           { key: "/dashboard", icon: <AreaChartOutlined />, label: "Dashboard" },
         ]}

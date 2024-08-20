@@ -57,7 +57,7 @@ const TablaTrabajador = ({ setTitle }) => {
       key: "equipo",
       render: (_, record) => (
         <Flex align="center" justify="center" gap={2}>
-          {record.equipos.length > 0 ? (
+          {record?.equipos?.length > 0 ? (
             <Button onClick={() => handleEquipos(record)}>
               <EyeOutlined />
             </Button>
@@ -104,6 +104,7 @@ const TablaTrabajador = ({ setTitle }) => {
       ),
     },
   ];
+  
 
   const handleDelete = async (id) => {
     const response = await fetch(

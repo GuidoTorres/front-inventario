@@ -27,7 +27,7 @@ const Dashboard = ({ setTitle }) => {
           <Card bordered={true}>
             <Typography.Title level={5}>
               {" "}
-              Monitores Sector Cayma
+              Monitores
             </Typography.Title>
             {equipos.monitor ? (
               <Grafico data={equipos?.monitor} />
@@ -39,7 +39,7 @@ const Dashboard = ({ setTitle }) => {
         <Col span={6}>
           <Card bordered={false}>
             <Typography.Title level={5}>
-              Impresoras Sector Cayma
+              Impresoras 
             </Typography.Title>
             {equipos.impresoras ? (
               <Grafico data={equipos?.impresoras} />
@@ -50,7 +50,7 @@ const Dashboard = ({ setTitle }) => {
         </Col>
         <Col span={6}>
           <Card bordered={false}>
-            <Typography.Title level={5}> Cpu Sector Cayma</Typography.Title>
+            <Typography.Title level={5}> Cpu</Typography.Title>
 
             {equipos.cpu ? (
               <Grafico data={equipos?.cpu} />
@@ -61,7 +61,7 @@ const Dashboard = ({ setTitle }) => {
         </Col>
         <Col span={6}>
           <Card bordered={false}>
-            <Typography.Title level={5}> Laptops Sector Cayma</Typography.Title>
+            <Typography.Title level={5}> Laptops</Typography.Title>
 
             {equipos.laptop ? (
               <Grafico data={equipos?.laptop} />
