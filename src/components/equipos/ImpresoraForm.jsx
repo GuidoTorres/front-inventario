@@ -20,6 +20,13 @@ const ImpresoraForm = ({
           className="flex-content"
           label="Encargado"
           name="trabajador_id"
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.label ?? "")
+              .toLowerCase()
+              .includes(input.toLowerCase())
+          }
           rules={[
             {
               required: false,
@@ -79,7 +86,7 @@ const ImpresoraForm = ({
         <Form.Item
           className="flex-content"
           label="Usuario"
-          name="usuario"
+          name="usuario_actual"
           rules={[
             {
               required: false,
@@ -88,8 +95,8 @@ const ImpresoraForm = ({
           ]}
         >
           <Input
-            value={equipo.usuario || undefined}
-            onChange={(e) => handleData(e.target.value, "usuario")}
+            value={equipo.usuario_actual || undefined}
+            onChange={(e) => handleData(e.target.value, "usuario_actual")}
             className="input-form"
           />
         </Form.Item>

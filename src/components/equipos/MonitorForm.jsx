@@ -18,7 +18,7 @@ const MonitorForm = ({
       <Form.Item
           className="flex-content"
           label="Encargado"
-          name="encargado"
+          name="trabajador_id"
           rules={[
             {
               required: false,
@@ -31,6 +31,13 @@ const MonitorForm = ({
             value={equipo.trabajador_id || undefined}
             onChange={(e) => handleData(e, "trabajador_id")}
             allowClear
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "")
+                .toLowerCase()
+                .includes(input.toLowerCase())
+            }
             options={trabajador.map((item) => {
               return {
                 label: item.nombre,
@@ -42,7 +49,7 @@ const MonitorForm = ({
         <Form.Item
           className="flex-content"
           label="Tecnología"
-          name="tecnologia"
+          name="tecnologia_monitor"
           rules={[
             {
               required: false,
@@ -51,8 +58,8 @@ const MonitorForm = ({
           ]}
         >
           <Input
-            value={equipo.tecnologia || undefined}
-            onChange={(e) => handleData(e.target.value, "tecnologia")}
+            value={equipo.tecnologia_monitor || undefined}
+            onChange={(e) => handleData(e.target.value, "tecnologia_monitor")}
             className="input-form"
           />
         </Form.Item>
@@ -80,7 +87,7 @@ const MonitorForm = ({
         <Form.Item
           className="flex-content"
           label="Usuario"
-          name="usuario"
+          name="usuario_actual"
           rules={[
             {
               required: false,
@@ -89,8 +96,8 @@ const MonitorForm = ({
           ]}
         >
           <Input
-            value={equipo.usuario || undefined}
-            onChange={(e) => handleData(e.target.value, "usuario")}
+            value={equipo.usuario_actual || undefined}
+            onChange={(e) => handleData(e.target.value, "usuario_actual")}
             className="input-form"
           />
         </Form.Item>

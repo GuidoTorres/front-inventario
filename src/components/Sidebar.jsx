@@ -44,7 +44,7 @@ const Sidebar = () => {
         className="menu-bar"
         items={[
           { key: "/trabajadores", icon: <UserOutlined />, label: "Trabajadores" },
-          { key: "/equipos", icon: <LaptopOutlined />, label: "Equipos" },
+          { key: "/menu/equipos", icon: <LaptopOutlined />, label: "Equipos" },
           { key: "/dependencias", icon: <SolutionOutlined />, label: "Dependencias" },
           { key: "/subdependencias", icon: <ApartmentOutlined />, label: "Sub Dependencias" },
           // { key: "/mantenimiento", icon: <ToolOutlined />, label: "Mantenimiento" },

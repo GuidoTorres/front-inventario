@@ -1,4 +1,12 @@
-import { Button, Flex, Popconfirm, Table, notification, Switch } from "antd";
+import {
+  Button,
+  Flex,
+  Popconfirm,
+  Table,
+  notification,
+  Switch,
+  Select,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import RegistrarTrabajador from "./RegistrarTrabajador";
 import {
@@ -75,7 +83,10 @@ const TablaTrabajador = ({ setTitle }) => {
       key: "action",
       render: (_, record) => (
         <Flex align="center" justify="center" gap={2}>
-          <Switch checked={record.estado} onChange={() =>handleEstado(record.id)}/>{" "}
+          <Switch
+            checked={record.estado}
+            onChange={() => handleEstado(record.id)}
+          />{" "}
         </Flex>
       ),
     },
@@ -104,7 +115,6 @@ const TablaTrabajador = ({ setTitle }) => {
       ),
     },
   ];
-  
 
   const handleDelete = async (id) => {
     const response = await fetch(
@@ -182,6 +192,35 @@ const TablaTrabajador = ({ setTitle }) => {
     };
     setSearch(filterData());
   };
+
+  const updateRegisters = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE}/trabajadores/planilla`,
+      {
+        method: "GET",
+      }
+    );
+    const confirm = await response.json();
+
+    if (response.status === 200) {
+      const combinedMessage = `${confirm.msg} | Nuevos Registros: ${confirm.nuevosRegistros} | Registros actualizados: ${confirm.registrosActualizados}`;
+      notification.success({
+        message: combinedMessage,
+      });
+      getTrabajadores();
+    } else {
+      notification.error({
+        message: confirm.msg,
+      });
+    }
+  };
+
+  const handleState = (data) => {
+
+    const filterData = trabajadores.filter((item) => item.estado == data);
+    setSearch(filterData);
+  };
+
   return (
     <>
       <div
@@ -205,11 +244,31 @@ const TablaTrabajador = ({ setTitle }) => {
             style={{ width: "30%" }}
             onChange={(e) => onSearch(e.target.value)}
           />
+          <Select
+            style={{ marginLeft: "5px", width: "100px" }}
+            className="input-form"
+            placeholder={"Estado"}
+            onChange={(e) => handleState(e)}
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            allowClear
+            options={[
+              {
+                value: "1",
+                label: "Activos",
+              },
+ 
+            ]}
+          />
         </div>
         <div
           style={{ width: "30%", display: "flex", justifyContent: "flex-end" }}
         >
           <Button onClick={() => setIsModalOpen(true)}>Registrar</Button>
+          <Button onClick={updateRegisters}>Actualizar Registros</Button>
         </div>
       </div>
       <Table columns={columns} dataSource={search} onChange={onChange} />

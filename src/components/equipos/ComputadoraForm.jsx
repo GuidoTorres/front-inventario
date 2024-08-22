@@ -14,8 +14,6 @@ const ComputadoraForm = ({
 }) => {
   return (
     <>
-
-
       <div className="flex">
         <Form.Item
           className="flex-content-pc"
@@ -33,8 +31,12 @@ const ComputadoraForm = ({
             value={equipo.trabajador_id || undefined}
             onChange={(e) => handleData(e, "trabajador_id")}
             allowClear
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
             popupMatchSelectWidth={false}
-
             options={trabajador.map((item) => {
               return {
                 label: item.nombre,
@@ -95,7 +97,6 @@ const ComputadoraForm = ({
             className="input-form"
             value={equipo.ofimatica || undefined}
             onChange={(e) => handleData(e, "ofimatica")}
-
             options={[
               {
                 label: "LICENCIADO",
@@ -140,24 +141,22 @@ const ComputadoraForm = ({
             className="input-form"
             value={equipo.windows || undefined}
             onChange={(e) => handleData(e, "windows")}
-
             options={[
               {
                 label: "LICENCIADO",
-                value: "LICENCIADO",
+                value: true,
               },
               {
                 label: "NO LICENCIADO",
-                value: "NO LICENCIADO",
+                value: false,
               },
             ]}
           />
         </Form.Item>
       </div>
 
-
       <div className="flex">
-      <Form.Item
+        <Form.Item
           className="flex-content-pc"
           label="Sistema Operativo"
           name="sistema_operativo"
@@ -188,7 +187,8 @@ const ComputadoraForm = ({
           <Select
             className="input-form"
             value={equipo.antivirus || undefined}
-            onChange={[
+            onChange={(e) => handleData(e, "antivirus")}
+            options={[
               {
                 label: "SI",
                 value: true,
@@ -206,15 +206,25 @@ const ComputadoraForm = ({
           name="unidad_optica"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Campo obligatorio.",
             },
           ]}
         >
-          <Input
-            value={equipo.unidad_optica || undefined}
-            onChange={(e) => handleData(e.target.value, "unidad_optica")}
+          <Select
             className="input-form"
+            value={equipo.unidad_optica || undefined}
+            onChange={(e) => handleData(e, "unidad_optica")}
+            options={[
+              {
+                label: "SI",
+                value: true,
+              },
+              {
+                label: "NO",
+                value: false,
+              },
+            ]}
           />
         </Form.Item>
       </div>
@@ -223,17 +233,17 @@ const ComputadoraForm = ({
         <Form.Item
           className="flex-content-pc"
           label="Usuario"
-          name="usuario"
+          name="usuario_actual"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Campo obligatorio.",
             },
           ]}
         >
           <Input
-            value={equipo.usuario || undefined}
-            onChange={(e) => handleData(e.target.value, "usuario")}
+            value={equipo.usuario_actual || undefined}
+            onChange={(e) => handleData(e.target.value, "usuario_actual")}
             className="input-form"
           />
         </Form.Item>
@@ -243,7 +253,7 @@ const ComputadoraForm = ({
           name="ip"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Campo obligatorio.",
             },
           ]}

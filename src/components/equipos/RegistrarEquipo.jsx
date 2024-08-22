@@ -385,7 +385,7 @@ const RegistrarEquipo = ({
           <Form.Item
             className="flex-content"
             label="Sede"
-            name="sede"
+            name="sede_id"
             rules={[
               {
                 required: true,
@@ -416,7 +416,7 @@ const RegistrarEquipo = ({
           <Form.Item
             className="flex-content"
             label="Modulo"
-            name="modulo"
+            name="modulo_id"
             rules={[
               {
                 required: false,
@@ -449,7 +449,7 @@ const RegistrarEquipo = ({
           <Form.Item
             className="flex-content"
             label="Área"
-            name="area"
+            name="dependencia_id"
             rules={[
               {
                 required: false,
@@ -480,7 +480,7 @@ const RegistrarEquipo = ({
           <Form.Item
             className="flex-content"
             label="Oficina"
-            name="oficina"
+            name="sub_dependencia_id"
             rules={[
               {
                 required: false,

@@ -32,7 +32,6 @@ const Equipos = ({ setTitle }) => {
     if (info) setEquipos(info.data);
   };
 
-
   const columns = [
     {
       title: "Nro",
@@ -58,7 +57,7 @@ const Equipos = ({ setTitle }) => {
       title: "Estado",
       dataIndex: "estado",
       align: "center",
-      render: (_,record) => (
+      render: (_, record) => (
         <>
           {record.estado_conserv === "1" || record.estado_conserv === "1" ? (
             <Tag color="green">Bueno</Tag>
@@ -103,19 +102,21 @@ const Equipos = ({ setTitle }) => {
       ),
     },
   ];
-  
 
   const handleEdit = (val) => {
     setIsModalOpen(true);
     setEditar(val);
   };
   const handleDelete = async (id) => {
-    const response = await fetch(`http://10.30.1.43:8085/api/v1/equipos/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE}/equipos/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const confirm = await response.json();
 
     if (response.status === 200) {
@@ -133,41 +134,48 @@ const Equipos = ({ setTitle }) => {
   const filtrar = () => {
     const filterData = () => {
       // Filtrar solo si al menos uno de los criterios de búsqueda está presente
-      if (buscar === ""  && tipo === ""  && estado === "" ) {
+      if (buscar === "" && tipo === "" && estado === "") {
         return equipos;
       } else {
         // Filtrar equipos según los criterios proporcionados
         const resultadosFiltrados = equipos.filter((item) => {
-          const coincideBuscar =
-            buscar
-              ? item?.sbn?.toLowerCase().includes(buscar?.toLowerCase()) ||
-                item?.marca?.toLowerCase().includes(buscar?.toLowerCase()) ||
-                item?.descripcion?.toLowerCase().includes(buscar?.toLowerCase())
-              : true;
-          const coincideTipo =
-            tipo ? item?.tipo?.toLowerCase() === tipo?.toLowerCase() : true;
-          const coincideEstado =
-            estado ? item?.estado?.toLowerCase() === estado?.toLowerCase() : true;
-  
+          const coincideBuscar = buscar
+            ? item?.sbn?.toLowerCase().includes(buscar?.toLowerCase()) ||
+              item?.marca?.toLowerCase().includes(buscar?.toLowerCase()) ||
+              item?.descripcion?.toLowerCase().includes(buscar?.toLowerCase())
+            : true;
+          const coincideTipo = tipo
+            ? item?.tipo?.toLowerCase() === tipo?.toLowerCase()
+            : true;
+          const coincideEstado = estado
+            ? item?.estado?.toLowerCase() === estado?.toLowerCase()
+            : true;
+
           // Un elemento pasa el filtro si todos los criterios coinciden
           return coincideBuscar && coincideTipo && coincideEstado;
         });
-  
+
         return resultadosFiltrados;
       }
     };
-  
+
     setSearch(filterData());
   };
-  
+
   useEffect(() => {
     filtrar();
   }, [buscar, tipo, estado, equipos]);
 
   return (
     <>
+      <div style={{ display: "flex", justifyContent: "flex-start" }}>
+        <label htmlFor="">
+          <strong>Total de equipos: {equipos.length}</strong>{" "}
+        </label>
+      </div>
       <div
         style={{
+          marginTop: "10px",
           marginBottom: "10px",
           width: "100%",
           display: "flex",

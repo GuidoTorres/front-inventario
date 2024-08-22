@@ -16,6 +16,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Login from "../components/login/Login";
 import { InventarioContext } from "../context/InventarioContext";
 import { ProtectedRoute } from "../routes/ProtectedRoute";
+import MenuEquipos from "../components/equipos/MenuEquipos";
+import ActualizarEquipos from "../components/equipos/ActualizarEquipos";
 const { Sider, Header, Content } = Layout;
 
 const MainPage = () => {
@@ -25,8 +27,6 @@ const MainPage = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [title, setTitle] = useState("Trabajador");
   const { setIsLogged, isLogged } = useContext(InventarioContext);
-
-
 
   return (
     <Layout>
@@ -59,16 +59,51 @@ const MainPage = () => {
               <Routes>
                 <Route
                   path="/trabajadores"
-                  element={<ProtectedRoute><TablaTrabajador setTitle={setTitle} /></ProtectedRoute>}
+                  element={
+                    <ProtectedRoute>
+                      <TablaTrabajador setTitle={setTitle} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/menu/equipos"
+                  element={
+                    <ProtectedRoute>
+                      <MenuEquipos setTitle={setTitle} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/actualizar/equipos"
+                  element={
+                    <ProtectedRoute>
+                      <ActualizarEquipos setTitle={setTitle} />
+                    </ProtectedRoute>
+                  }
                 />
                 <Route
                   path="/equipos"
-                  element={<ProtectedRoute><Equipos setTitle={setTitle} /></ProtectedRoute>}
+                  element={
+                    <ProtectedRoute>
+                      <Equipos setTitle={setTitle} />
+                    </ProtectedRoute>
+                  }
                 />
-                <Route path="/subdependencias" element={<ProtectedRoute><Areas setTitle={setTitle} /></ProtectedRoute>} />
+                <Route
+                  path="/subdependencias"
+                  element={
+                    <ProtectedRoute>
+                      <Areas setTitle={setTitle} />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="/dependencias"
-                  element={<ProtectedRoute><Cargos setTitle={setTitle} /></ProtectedRoute>}
+                  element={
+                    <ProtectedRoute>
+                      <Cargos setTitle={setTitle} />
+                    </ProtectedRoute>
+                  }
                 />
                 {/* <Route
                   path="/mantenimiento"
@@ -76,7 +111,11 @@ const MainPage = () => {
                 /> */}
                 <Route
                   path="/dashboard"
-                  element={<ProtectedRoute><Dashboard setTitle={setTitle} /></ProtectedRoute>}
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard setTitle={setTitle} />
+                    </ProtectedRoute>
+                  }
                 />
               </Routes>
             </Content>

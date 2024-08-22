@@ -31,6 +31,13 @@ const Perifericos = ({
             value={equipo.trabajador_id || undefined}
             onChange={(e) => handleData(e, "trabajador_id")}
             allowClear
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "")
+                .toLowerCase()
+                .includes(input.toLowerCase())
+            }
             options={trabajador.map((item) => {
               return {
                 label: item.nombre,
@@ -88,7 +95,7 @@ const Perifericos = ({
           className="flex-content"
           style={{ visibility: "hidden" }}
           label="Usuario"
-          name="usuario"
+          name="usuario_actual"
           rules={[
             {
               required: false,
@@ -97,8 +104,8 @@ const Perifericos = ({
           ]}
         >
           <Input
-            value={equipo.usuario || undefined}
-            onChange={(e) => handleData(e.target.value, "usuario")}
+            value={equipo.usuario_actual || undefined}
+            onChange={(e) => handleData(e.target.value, "usuario_actual")}
             className="input-form"
           />
         </Form.Item>
