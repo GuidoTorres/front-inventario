@@ -234,7 +234,7 @@ const ActualizarEquipos = ({ setTitle }) => {
     <>
       <div style={{ display: "flex", justifyContent: "flex-start" }}>
         <label htmlFor="">
-          <strong>Total de equipos: {equipos.length}</strong>{" "}
+          <strong>Total de equipos: {equipos?.length}</strong>{" "}
         </label>
       </div>
       <div
