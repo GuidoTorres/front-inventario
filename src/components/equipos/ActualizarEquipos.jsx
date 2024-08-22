@@ -395,7 +395,7 @@ const ActualizarEquipos = ({ setTitle }) => {
           ...rowSelection,
         }}
         columns={columns}
-        dataSource={search.map((item, index) => ({
+        dataSource={search?.map((item, index) => ({
           ...item,
           key: item.id || index,
         }))}
