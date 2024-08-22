@@ -49,7 +49,7 @@ const Perifericos = ({
         <Form.Item
           className="flex-content"
           label="Usuario"
-          name="usuario"
+          name="usuario_actual"
           rules={[
             {
               required: false,
@@ -58,8 +58,8 @@ const Perifericos = ({
           ]}
         >
           <Input
-            value={equipo.usuario || undefined}
-            onChange={(e) => handleData(e.target.value, "usuario")}
+            value={equipo.usuario_actual || undefined}
+            onChange={(e) => handleData(e.target.value, "usuario_actual")}
             className="input-form"
           />
         </Form.Item>
