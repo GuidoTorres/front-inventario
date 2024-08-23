@@ -84,7 +84,95 @@ const ComputadoraForm = ({
       <div className="flex">
         <Form.Item
           className="flex-content-pc"
-          label="Ofimatica"
+          label="Procesador"
+          name="procesador"
+          rules={[
+            {
+              required: false,
+              message: "Campo obligatorio.",
+            },
+          ]}
+        >
+          <Input
+            value={equipo.procesador || undefined}
+            onChange={(e) => handleData(e.target.value, "procesador")}
+            className="input-form"
+          />
+        </Form.Item>
+        <Form.Item
+          className="flex-content-pc"
+          label="Grafica Dedicada"
+          name="tarjeta_video"
+          rules={[
+            {
+              required: false,
+              message: "Campo obligatorio.",
+            },
+          ]}
+        >
+          <Input
+            value={equipo.tarjeta_video || undefined}
+            onChange={(e) => handleData(e.target.value, "tarjeta_video")}
+            className="input-form"
+          />
+        </Form.Item>
+        <Form.Item
+          className="flex-content-pc"
+          label="Tipo de disco duro"
+          name="tipo_disco_duro"
+          rules={[
+            {
+              required: false,
+              message: "Campo obligatorio.",
+            },
+          ]}
+        >
+          <Input
+            value={equipo.tipo_disco_duro || undefined}
+            onChange={(e) => handleData(e.target.value, "tipo_disco_duro")}
+            className="input-form"
+          />
+        </Form.Item>
+        <Form.Item
+          className="flex-content-pc"
+          label="Capacidad Disco duro"
+          name="almacenamiento"
+          rules={[
+            {
+              required: false,
+              message: "Campo obligatorio.",
+            },
+          ]}
+        >
+          <Input
+            value={equipo.almacenamiento || undefined}
+            onChange={(e) => handleData(e.target.value, "almacenamiento")}
+            className="input-form"
+          />
+        </Form.Item>
+      </div>
+
+      <div className="flex">
+        <Form.Item
+          className="flex-content-pc"
+          label="Memoria ram"
+          name="memoria_ram"
+          rules={[
+            {
+              required: false,
+              message: "Campo obligatorio.",
+            },
+          ]}
+        >
+          <Input
+            value={equipo.memoria_ram || undefined}
+            onChange={(e) => handleData(e.target.value, "memoria_ram")}
+            className="input-form"
+          />
+        </Form.Item>
+        <Form.Item
+          className="flex-content-pc"
+          label="Licencia Office"
           name="ofimatica"
           rules={[
             {
@@ -111,7 +199,7 @@ const ComputadoraForm = ({
         </Form.Item>
         <Form.Item
           className="flex-content-pc"
-          label="Office"
+          label="Versión Office"
           name="office"
           rules={[
             {
@@ -126,9 +214,12 @@ const ComputadoraForm = ({
             className="input-form"
           />
         </Form.Item>
+      </div>
+
+      <div className="flex">
         <Form.Item
           className="flex-content-pc"
-          label="Windows"
+          label="Lincencia Windows"
           name="windows"
           rules={[
             {
@@ -153,12 +244,9 @@ const ComputadoraForm = ({
             ]}
           />
         </Form.Item>
-      </div>
-
-      <div className="flex">
         <Form.Item
           className="flex-content-pc"
-          label="Sistema Operativo"
+          label="Versión Sistema Operativo"
           name="sistema_operativo"
           rules={[
             {
@@ -200,6 +288,9 @@ const ComputadoraForm = ({
             ]}
           />
         </Form.Item>
+      </div>
+
+      <div className="flex">
         <Form.Item
           className="flex-content-pc"
           label="Unidad Optica"
@@ -227,9 +318,6 @@ const ComputadoraForm = ({
             ]}
           />
         </Form.Item>
-      </div>
-
-      <div className="flex">
         <Form.Item
           className="flex-content-pc"
           label="Usuario"

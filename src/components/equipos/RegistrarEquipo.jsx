@@ -132,7 +132,10 @@ const RegistrarEquipo = ({
   };
   useEffect(() => {
     if (editar) {
-      const format = { ...editar, ingreso: dayjs(editar.fecha_ingreso).format("YYYY") };
+      const format = {
+        ...editar,
+        ingreso: dayjs(editar.fecha_ingreso).format("YYYY"),
+      };
       setEquipo(format);
       form.setFieldsValue(format);
     } else {
