@@ -186,28 +186,6 @@ const Equipos = ({ setTitle }) => {
 
   return (
     <>
-      <Row gutter={16}>
-        <Col span={6}>
-          <Card bordered={false}>
-            
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card bordered={false}>
-            <Statistic
-              title="Idle"
-              value={9.3}
-              precision={2}
-              valueStyle={{
-                color: "#cf1322",
-              }}
-              prefix={<ArrowDownOutlined />}
-              suffix="%"
-            />
-          </Card>
-        </Col>
-      </Row>
-
       <div style={{ display: "flex", justifyContent: "flex-start", marginTop:"20px" }}>
         <label htmlFor="">
           <strong>Total de equipos: {equipos.length}</strong>{" "}
