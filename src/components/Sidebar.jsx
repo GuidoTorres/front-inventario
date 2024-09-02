@@ -26,7 +26,18 @@ const Sidebar = () => {
   }, [location]);
 
   const handleMenuClick = (e) => {
-    navigate(e.key);
+    // Maneja la selección del menú aquí
+    const key = e.key;
+  
+    // Si tienes varias rutas que deberían seleccionar el mismo ítem
+    if (key === "/equipos" || key === "/actualizar/equipos") {
+      setSelectedKey("/menu/equipos");
+    } else {
+      setSelectedKey(key);
+    }
+  
+    // Navega a la ruta seleccionada
+    navigate(key);
   };
 
   

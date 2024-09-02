@@ -7,9 +7,18 @@ import {
   Table,
   Tag,
   notification,
+  Card,
+  Col,
+  Row,
+  Statistic,
 } from "antd";
 import RegistrarEquipo from "./RegistrarEquipo";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+} from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 const Equipos = ({ setTitle }) => {
   const [equipos, setEquipos] = useState([]);
@@ -43,14 +52,20 @@ const Equipos = ({ setTitle }) => {
       dataIndex: "sbn",
       align: "center",
     },
-    {
-      title: "Secuencia",
-      dataIndex: "secuencia",
-      align: "center",
-    },
+
     {
       title: "Descripción",
       dataIndex: "descripcion",
+      align: "center",
+    },
+    {
+      title: "Marca",
+      dataIndex: "marca",
+      align: "center",
+    },
+    {
+      title: "Modelo",
+      dataIndex: "modelo",
       align: "center",
     },
     {
@@ -142,7 +157,10 @@ const Equipos = ({ setTitle }) => {
           const coincideBuscar = buscar
             ? item?.sbn?.toLowerCase().includes(buscar?.toLowerCase()) ||
               item?.marca?.toLowerCase().includes(buscar?.toLowerCase()) ||
-              item?.descripcion?.toLowerCase().includes(buscar?.toLowerCase())
+              item?.descripcion
+                ?.toLowerCase()
+                .includes(buscar?.toLowerCase()) ||
+              item?.modelo?.toLowerCase().includes(buscar?.toLowerCase())
             : true;
           const coincideTipo = tipo
             ? item?.tipo?.toLowerCase() === tipo?.toLowerCase()
@@ -168,7 +186,29 @@ const Equipos = ({ setTitle }) => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-start" }}>
+      <Row gutter={16}>
+        <Col span={6}>
+          <Card bordered={false}>
+            
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card bordered={false}>
+            <Statistic
+              title="Idle"
+              value={9.3}
+              precision={2}
+              valueStyle={{
+                color: "#cf1322",
+              }}
+              prefix={<ArrowDownOutlined />}
+              suffix="%"
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <div style={{ display: "flex", justifyContent: "flex-start", marginTop:"20px" }}>
         <label htmlFor="">
           <strong>Total de equipos: {equipos.length}</strong>{" "}
         </label>

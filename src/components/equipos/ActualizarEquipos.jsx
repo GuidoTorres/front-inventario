@@ -50,16 +50,23 @@ const ActualizarEquipos = ({ setTitle }) => {
       dataIndex: "sbn",
       align: "center",
     },
-    {
-      key: "secuencia",
-      title: "Secuencia",
-      dataIndex: "secuencia",
-      align: "center",
-    },
+
     {
       key: "descripcion",
       title: "Descripción",
       dataIndex: "descripcion",
+      align: "center",
+    },
+    {
+      key: "marca",
+      title: "Marca",
+      dataIndex: "marca",
+      align: "center",
+    },
+    {
+      key: "modelo",
+      title: "Modelo",
+      dataIndex: "modelo",
       align: "center",
     },
     {
@@ -68,10 +75,11 @@ const ActualizarEquipos = ({ setTitle }) => {
       render: (_, record) => dayjs(record.fecha_ingreso).format("DD-MM-YYYY"),
       align: "center",
     },
+
     {
       key: "estado",
       title: "Estado",
-      dataIndex: "estado",
+      dataIndex: "estado_conserv",
       align: "center",
       render: (_, record) => {
         let color = "green";
@@ -112,29 +120,6 @@ const ActualizarEquipos = ({ setTitle }) => {
 
         return <Tag color={color}>{text}</Tag>;
       },
-    },
-    {
-      key: "acciones",
-      title: "Acciones",
-      align: "center",
-      render: (_, record) => (
-        <Flex align="center" justify="center" gap={2}>
-          <Button onClick={() => handleEdit(record)}>
-            <EditOutlined />
-          </Button>
-          <Popconfirm
-            title="Eliminar trabajador"
-            description="¿Estás seguro de eliminar?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Sí"
-            cancelText="No"
-          >
-            <Button>
-              <DeleteOutlined />
-            </Button>
-          </Popconfirm>
-        </Flex>
-      ),
     },
   ];
 
@@ -228,6 +213,36 @@ const ActualizarEquipos = ({ setTitle }) => {
         message: confirm.msg,
       });
     }
+  };
+
+  const expandedRowRenderPrueba = (record) => {
+    const columns = [
+      {
+        title: 'Encargado',
+        dataIndex: 'usuario_final',
+        key: 'usuario_final',
+        align: "center",
+      },
+      {
+        title: 'Proveeedor',
+        dataIndex: 'proveedor',
+        key: 'proveedor',
+        align: "center",
+
+      },
+
+      {
+        title: 'Precio',
+        dataIndex: 'valor_compra',
+        key: 'valor_compra',
+        align: "center",
+
+      },
+
+
+    ];
+
+    return <Table columns={columns} dataSource={[record]} pagination={false} />;
   };
 
   return (
@@ -399,6 +414,22 @@ const ActualizarEquipos = ({ setTitle }) => {
           ...item,
           key: item.id || index,
         }))}
+        // expandable={{
+        //   expandedRowRender: (record) => (
+        //     <p
+        //       style={{
+        //         margin: 0,
+        //       }}
+        //     >
+        //       {record.usuario_final}
+        //     </p>
+        //   ),
+        //   rowExpandable: (record) => record.proveedor !== 'Not Expandable',
+        // }}
+          expandable={{
+          expandedRowRender: (record) => expandedRowRenderPrueba(record),
+          defaultExpandedRowKeys: ['0'],
+        }}
       />
       {isModalOpen && (
         <RegistrarEquipo

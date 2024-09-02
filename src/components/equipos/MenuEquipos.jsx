@@ -12,69 +12,57 @@ const MenuEquipos = ({ setTitle }) => {
     <div
       style={{
         display: "flex",
-        height: "100%",
         justifyContent: "center",
         alignItems: "center",
+        height: "100%",
+        gap: "20px",
       }}
     >
       <section
-        style={{
-          width: "40%",
-          height: "50%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          cursor: "pointer",
-        }}
+        style={{ height: "250px", cursor: "pointer" }}
         onClick={() => navigate("/equipos")}
       >
         <div
           style={{
-            width: "50%",
-            height: "70%",
             borderRadius: "50%",
+            boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+            height: "200px",
+            width: "200px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px"
-
+            backgroundColor: "white"
           }}
         >
           <LaptopOutlined style={{ fontSize: "120px" }} />
         </div>
-        <strong style={{ marginTop: "20px" }}>
-          <label htmlFor=""> Equipos</label>
-        </strong>
+        <p htmlFor="" style={{ marginTop: "10px", fontSize: "15px" }}>
+          <strong>Equipos</strong>
+        </p>
       </section>
+
       <section
-        style={{
-          width: "40%",
-          height: "50%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          cursor: "pointer",
-        }}
+        style={{ height: "250px", cursor: "pointer" }}
         onClick={() => navigate("/actualizar/equipos")}
       >
         <div
           style={{
-            width: "50%",
-            height: "70%",
             borderRadius: "50%",
+            boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+            height: "200px",
+            width: "200px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px"
+            backgroundColor: "white"
           }}
         >
           <SyncOutlined style={{ fontSize: "120px" }} />
         </div>
-        <strong style={{ marginTop: "20px" }}>
-          <label htmlFor="">Actualizar equipos</label>
-        </strong>
+        <p htmlFor="" style={{ marginTop: "10px", fontSize: "15px" }}>
+          {" "}
+          <strong>Actualizar equipos</strong>
+        </p>
       </section>
     </div>
   );
