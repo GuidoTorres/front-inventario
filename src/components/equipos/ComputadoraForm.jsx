@@ -497,7 +497,7 @@ const ComputadoraForm = ({
         </Form.Item>
         <Form.Item
           className="flex-content-pc"
-          label="Generación procesador"
+          label="Generación "
           name="generacion_procesador"
           rules={[
             {

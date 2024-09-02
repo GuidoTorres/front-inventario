@@ -32,7 +32,6 @@ const Dashboard = ({ setTitle }) => {
     const info = await response.json();
     if (info) setDependencias(info);
   };
-  console.log(dependencias);
   const columns = [
     {
       title: "Tipo",
@@ -77,17 +76,6 @@ const Dashboard = ({ setTitle }) => {
     // Agrega más columnas según los tipos que tengas
   ];
 
-  const dataSource = equipos?.totalPorTipoPorDependencia?.flatMap((dep, index) =>
-    dep.tipos.map(tipo => ({
-      key: `${index}-${tipo.tipo}`, // Clave única para cada fila
-      dependencia: dep.dependencia,
-      tipo: tipo.tipo,
-      cantidad: tipo.cantidad,
-    }))
-  );
-
-    console.log(dataSource);
-
   const items = [
     {
       key: "1",
@@ -97,7 +85,7 @@ const Dashboard = ({ setTitle }) => {
           <Row gutter={16}>
             <Col span={6}>
               <Card bordered={true}>
-                <Typography.Title level={5}> Monitores</Typography.Title>
+                <Typography.Title level={5}> Monitores - {equipos.monitorCantidad}</Typography.Title>
                 {equipos.monitor ? (
                   <Grafico data={equipos?.monitor} />
                 ) : (
@@ -107,7 +95,7 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={6}>
               <Card bordered={false}>
-                <Typography.Title level={5}>Impresoras</Typography.Title>
+                <Typography.Title level={5}>Impresoras - {equipos.impresorasCantidad}</Typography.Title>
                 {equipos.impresoras ? (
                   <Grafico data={equipos?.impresoras} />
                 ) : (
@@ -117,7 +105,7 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={6}>
               <Card bordered={false}>
-                <Typography.Title level={5}> Cpu</Typography.Title>
+                <Typography.Title level={5}> Cpu - {equipos.cpuCantidad}</Typography.Title>
 
                 {equipos.cpu ? (
                   <Grafico data={equipos?.cpu} />
@@ -128,7 +116,7 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={6}>
               <Card bordered={false}>
-                <Typography.Title level={5}> Laptops</Typography.Title>
+                <Typography.Title level={5}> Laptops - {equipos.laptopCantidad}</Typography.Title>
 
                 {equipos.laptop ? (
                   <Grafico data={equipos?.laptop} />
@@ -167,7 +155,7 @@ const Dashboard = ({ setTitle }) => {
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
-                  Procesadores por Modelo
+                  Procesadores por Modelo - {equipos.procesadoresCantidad}
                 </Typography.Title>
                 {equipos.procesadores ? (
                   <Grafico data={equipos?.procesadores} />
@@ -180,7 +168,7 @@ const Dashboard = ({ setTitle }) => {
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
-                  Procesadores por Generación
+                  Procesadores por Generación - {equipos.cpusPorGeneracionCantidad}
                 </Typography.Title>
                 {equipos.cpusPorGeneracion ? (
                   <Grafico data={equipos?.cpusPorGeneracion} />
@@ -189,27 +177,7 @@ const Dashboard = ({ setTitle }) => {
                 )}
               </Card>
             </Col>
-            <Col span={6}>
-              <Card bordered={false}>
-                <Typography.Title level={5}>Cpus por estado</Typography.Title>
-                {equipos.impresoras ? (
-                  <Grafico data={equipos?.cpu} />
-                ) : (
-                  <p> Sin registros</p>
-                )}
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card bordered={false}>
-                <Typography.Title level={5}> Laptops por estado</Typography.Title>
 
-                {equipos.cpu ? (
-                  <Grafico data={equipos?.laptop} />
-                ) : (
-                  <p> Sin registros</p>
-                )}
-              </Card>
-            </Col>
           </Row>
         </Flex>
       ),
@@ -224,7 +192,7 @@ const Dashboard = ({ setTitle }) => {
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
-                  Impresora por Tipo
+                  Impresora por Tipo - {equipos?.tipoImpresoraCantidad}
                 </Typography.Title>
                 {equipos?.tipoImpresora ? (
                   <Grafico data={equipos?.tipoImpresora} />
@@ -233,22 +201,11 @@ const Dashboard = ({ setTitle }) => {
                 )}
               </Card>
             </Col>
+
             <Col span={6}>
               <Card bordered={false}>
                 <Typography.Title level={5}>
-                  Impresoras por estado
-                </Typography.Title>
-                {equipos.impresoras ? (
-                  <Grafico data={equipos?.impresoras} />
-                ) : (
-                  <p> Sin registros</p>
-                )}
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card bordered={false}>
-                <Typography.Title level={5}>
-                  Impresoras por Suministro
+                  Impresoras por Suministro - {equipos?.tipoImpresoraSuministroCantidad}
                 </Typography.Title>
                 {equipos.tipoImpresoraSuministro ? (
                   <Grafico data={equipos?.tipoImpresoraSuministro} />
@@ -271,7 +228,7 @@ const Dashboard = ({ setTitle }) => {
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
-                  Monitores por Tecnologia
+                  Monitores por Tecnologia - {equipos?.tipoMonitorCantidad}
                 </Typography.Title>
                 {equipos.tipoMonitor ? (
                   <Grafico data={equipos?.tipoMonitor} />
@@ -284,7 +241,7 @@ const Dashboard = ({ setTitle }) => {
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
-                  Monitores por Tamaño
+                  Monitores por Tamaño - {equipos?.monitorporPulgadasCantidad}
                 </Typography.Title>
                 {equipos.tipoMonitor ? (
                   <Grafico data={equipos?.monitorporPulgadas} />
