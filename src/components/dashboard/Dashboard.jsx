@@ -127,6 +127,28 @@ const Dashboard = ({ setTitle }) => {
             </Col>
           </Row>
           <Row gutter={16}>
+          <Col span={6}>
+              <Card bordered={false}>
+                <Typography.Title level={5}> Teclados - {equipos.cantidadTeclado}</Typography.Title>
+
+                {equipos.teclado ? (
+                  <Grafico data={equipos?.teclado} />
+                ) : (
+                  <p> Sin registros</p>
+                )}
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card bordered={false}>
+                <Typography.Title level={5}> Mouse - {equipos.cantidadMouse}</Typography.Title>
+
+                {equipos.mouse ? (
+                  <Grafico data={equipos?.mouse} />
+                ) : (
+                  <p> Sin registros</p>
+                )}
+              </Card>
+            </Col>
             <Col span={12}>
               <Card bordered={false}>
                 <Typography.Title level={5}>
@@ -151,7 +173,7 @@ const Dashboard = ({ setTitle }) => {
       children: (
         <Flex vertical gap={10}>
           <Row gutter={16}>
-            <Col span={6}>
+            <Col span={10}>
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
@@ -164,7 +186,7 @@ const Dashboard = ({ setTitle }) => {
                 )}
               </Card>
             </Col>
-            <Col span={6}>
+            <Col span={10}>
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
@@ -188,7 +210,7 @@ const Dashboard = ({ setTitle }) => {
       children: (
         <Flex vertical gap={10}>
           <Row gutter={16}>
-            <Col span={6}>
+            <Col span={10}>
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
@@ -202,7 +224,7 @@ const Dashboard = ({ setTitle }) => {
               </Card>
             </Col>
 
-            <Col span={6}>
+            <Col span={10}>
               <Card bordered={false}>
                 <Typography.Title level={5}>
                   Impresoras por Suministro - {equipos?.tipoImpresoraSuministroCantidad}
@@ -224,7 +246,7 @@ const Dashboard = ({ setTitle }) => {
       children: (
         <Flex vertical gap={10}>
           <Row gutter={16}>
-            <Col span={6}>
+            <Col span={10}>
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
@@ -237,7 +259,7 @@ const Dashboard = ({ setTitle }) => {
                 )}
               </Card>
             </Col>
-            <Col span={6}>
+            <Col span={10}>
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
