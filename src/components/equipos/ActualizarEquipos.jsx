@@ -414,18 +414,6 @@ const ActualizarEquipos = ({ setTitle }) => {
           ...item,
           key: item.id || index,
         }))}
-        // expandable={{
-        //   expandedRowRender: (record) => (
-        //     <p
-        //       style={{
-        //         margin: 0,
-        //       }}
-        //     >
-        //       {record.usuario_final}
-        //     </p>
-        //   ),
-        //   rowExpandable: (record) => record.proveedor !== 'Not Expandable',
-        // }}
           expandable={{
           expandedRowRender: (record) => expandedRowRenderPrueba(record),
           defaultExpandedRowKeys: ['0'],

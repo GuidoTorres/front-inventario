@@ -34,28 +34,15 @@ const Cargos = ({ setTitle }) => {
       align: "center",
     },
     {
-      title: "Nombre",
+      title: "Dependencia",
       dataIndex: "nombre",
       align: "center",
     },
-    // {
-    //   title: "Descripción",
-    //   dataIndex: "descripcion",
-    //   align: "center",
-    // },
     {
       title: "Modulo",
       render: (item) => item?.modulo?.nombre,
       align: "center",
     },
-    // {
-    //   title: "Cargo",
-    //   render: (item) =>
-    //     `${item?.unidad?.base?.dependencium?.nombres} / ${item?.unidad?.base?.nombres} / ${item?.unidad?.nombres} / ${item?.nombres}`
-    //   ,
-
-    //   align: "center",
-    // },
     {
       title: "Acciones",
       align: "center",

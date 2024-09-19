@@ -36,12 +36,12 @@ const Areas = ({ setTitle }) => {
       align: "center",
     },
     {
-      title: "Depedencia",
+      title: "Dependencia",
       render: (_, record) => record?.dependencia?.nombre,
       align: "center",
     },
     {
-      title: "Nombre",
+      title: "Sub Dependencia",
       dataIndex: "nombre",
       align: "center",
     },

@@ -20,6 +20,7 @@ import {
   ArrowUpOutlined,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
+import { Tabs } from "antd";
 const Equipos = ({ setTitle }) => {
   const [equipos, setEquipos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,10 +29,17 @@ const Equipos = ({ setTitle }) => {
   const [tipo, setTipo] = useState("");
   const [estado, setEstado] = useState("");
   const [search, setSearch] = useState([]);
+  const [buscar2, setBuscar2] = useState("");
+  const [search2, setSearch2] = useState([]);
+  const [tipo2, setTipo2] = useState("");
+  const [estado2, setEstado2] = useState("");
+
+  const [inventariados, setInventariados] = useState([]);
 
   useEffect(() => {
     setTitle("Equipos");
     getEquipos();
+    getEquiposInventariados();
   }, []);
 
   const getEquipos = async () => {
@@ -39,6 +47,14 @@ const Equipos = ({ setTitle }) => {
 
     const info = await response.json();
     if (info) setEquipos(info.data);
+  };
+  const getEquiposInventariados = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE}/equipos/inventariados`
+    );
+
+    const info = await response.json();
+    if (info) setInventariados(info.data);
   };
 
   const columns = [
@@ -179,178 +195,305 @@ const Equipos = ({ setTitle }) => {
 
     setSearch(filterData());
   };
+  const filtrar2 = () => {
+    const filterData = () => {
+      // Filtrar solo si al menos uno de los criterios de búsqueda está presente
+      if (buscar2 === "" && tipo2 === "" && estado2 === "") {
+        return inventariados;
+      } else {
+        // Filtrar equipos según los criterios proporcionados
+        const resultadosFiltrados = inventariados.filter((item) => {
+          const coincideBuscar = buscar2
+            ? item?.sbn?.toLowerCase().includes(buscar2?.toLowerCase()) ||
+              item?.marca?.toLowerCase().includes(buscar2?.toLowerCase()) ||
+              item?.descripcion
+                ?.toLowerCase()
+                .includes(buscar2?.toLowerCase()) ||
+              item?.modelo?.toLowerCase().includes(buscar2?.toLowerCase())
+            : true;
+          const coincideTipo = tipo2
+            ? item?.tipo?.toLowerCase() === tipo2?.toLowerCase()
+            : true;
+          const coincideEstado = estado2
+            ? item?.estado?.toLowerCase() === estado2?.toLowerCase()
+            : true;
+
+          // Un elemento pasa el filtro si todos los criterios coinciden
+          return coincideBuscar && coincideTipo && coincideEstado;
+        });
+
+        return resultadosFiltrados;
+      }
+    };
+
+    setSearch2(filterData());
+  };
 
   useEffect(() => {
     filtrar();
   }, [buscar, tipo, estado, equipos]);
 
+  useEffect(() => {
+    filtrar2();
+  }, [buscar2, tipo2, estado2, equipos]);
+
+  const optionsFilter = [
+    {
+      value: "Access point",
+      label: "Access point",
+    },
+    {
+      value: "Disco Duro",
+      label: "Disco Duro",
+    },
+    {
+      value: "Estabilizador",
+      label: "Estabilizador",
+    },
+    {
+      value: "Proyector",
+      label: "Proyector",
+    },
+
+    {
+      value: "Cpu",
+      label: "Cpu",
+    },
+    {
+      value: "Monitor",
+      label: "Monitor",
+    },
+    {
+      value: "Laptop",
+      label: "Laptop",
+    },
+    {
+      value: "Telefono",
+      label: "Teléfono",
+    },
+    {
+      value: "Teclado",
+      label: "Teclado",
+    },
+    {
+      value: "Mouse",
+      label: "Mouse",
+    },
+    {
+      value: "Switch",
+      label: "Switch",
+    },
+    {
+      value: "Router",
+      label: "Router",
+    },
+    {
+      value: "Servidor",
+      label: "Servidor",
+    },
+    {
+      value: "Lector de cd",
+      label: "Lector de cd",
+    },
+
+    {
+      value: "Impresora",
+      label: "Impresora",
+    },
+  ];
+
+  const items = [
+    {
+      key: "1",
+      label: "Total de equipos",
+      children: (
+        <>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "70%",
+                display: "flex",
+                justifyContent: "flex-start",
+                gap: "10px",
+              }}
+            >
+              <Search
+                placeholder="Buscar"
+                style={{ width: "30%" }}
+                onChange={(e) => setBuscar(e.target.value)}
+              />
+
+              <Select
+                className="input-form"
+                value={tipo || undefined}
+                placeholder={"Tipo de equipo"}
+                onChange={(e) => setTipo(e)}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                allowClear
+                options={optionsFilter.map((item) => item)}
+              />
+
+              <Select
+                className="input-form"
+                value={estado || undefined}
+                placeholder={"Estado de equipo"}
+                onChange={(e) => setEstado(e)}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                allowClear
+                options={optionsFilter.map((item) => item)}
+              />
+            </div>
+            <div
+              style={{
+                width: "30%",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Button onClick={() => setIsModalOpen(true)}>Registrar</Button>
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              marginTop: "20px",
+            }}
+          >
+            <label htmlFor="">
+              <strong>Total de equipos: {search.length}</strong>{" "}
+            </label>
+          </div>
+          <Table columns={columns} dataSource={search} />
+          {isModalOpen && (
+            <RegistrarEquipo
+              isModalOpen={isModalOpen}
+              setIsOpenModal={setIsModalOpen}
+              getEquipos={getEquipos}
+              editar={editar}
+              setEditar={setEditar}
+            />
+          )}
+        </>
+      ),
+    },
+    {
+      key: "2",
+      label: "Equipos Inventariados",
+      children: (
+        <>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "70%",
+                display: "flex",
+                justifyContent: "flex-start",
+                gap: "10px",
+              }}
+            >
+              <Search
+                placeholder="Buscar"
+                style={{ width: "30%" }}
+                onChange={(e) => setBuscar2(e.target.value)}
+              />
+
+              <Select
+                className="input-form"
+                value={tipo || undefined}
+                placeholder={"Tipo de equipo"}
+                onChange={(e) => setTipo2(e)}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                allowClear
+                options={optionsFilter.map((item) => item)}
+              />
+
+              <Select
+                className="input-form"
+                value={estado || undefined}
+                placeholder={"Estado de equipo"}
+                onChange={(e) => setEstado2(e)}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                allowClear
+                options={optionsFilter.map((item) => item)}
+              />
+            </div>
+            <div
+              style={{
+                width: "30%",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Button onClick={() => setIsModalOpen(true)}>Registrar</Button>
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              marginTop: "20px",
+            }}
+          >
+            <label htmlFor="">
+              <strong>Total de equipos: {search2.length}</strong>{" "}
+            </label>
+          </div>
+          <Table columns={columns} dataSource={search2} />
+          {isModalOpen && (
+            <RegistrarEquipo
+              isModalOpen={isModalOpen}
+              setIsOpenModal={setIsModalOpen}
+              getEquipos={getEquipos}
+              editar={editar}
+              setEditar={setEditar}
+            />
+          )}
+        </>
+      ),
+    },
+  ];
+
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-start", marginTop:"20px" }}>
-        <label htmlFor="">
-          <strong>Total de equipos: {equipos.length}</strong>{" "}
-        </label>
-      </div>
-      <div
-        style={{
-          marginTop: "10px",
-          marginBottom: "10px",
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div
-          style={{
-            width: "70%",
-            display: "flex",
-            justifyContent: "flex-start",
-            gap: "10px",
-          }}
-        >
-          <Search
-            placeholder="Buscar"
-            style={{ width: "30%" }}
-            onChange={(e) => setBuscar(e.target.value)}
-          />
-
-          <Select
-            className="input-form"
-            value={tipo || undefined}
-            placeholder={"Tipo de equipo"}
-            onChange={(e) => setTipo(e)}
-            showSearch
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            allowClear
-            options={[
-              {
-                value: "Access point",
-                label: "Access point",
-              },
-              {
-                value: "Disco Duro",
-                label: "Disco Duro",
-              },
-              {
-                value: "Estabilizador",
-                label: "Estabilizador",
-              },
-              {
-                value: "Proyector",
-                label: "Proyector",
-              },
-
-              {
-                value: "Cpu",
-                label: "Cpu",
-              },
-              {
-                value: "Monitor",
-                label: "Monitor",
-              },
-              {
-                value: "Laptop",
-                label: "Laptop",
-              },
-              {
-                value: "Telefono",
-                label: "Teléfono",
-              },
-              {
-                value: "Teclado",
-                label: "Teclado",
-              },
-              {
-                value: "Mouse",
-                label: "Mouse",
-              },
-              {
-                value: "Switch",
-                label: "Switch",
-              },
-              {
-                value: "Router",
-                label: "Router",
-              },
-              {
-                value: "Servidor",
-                label: "Servidor",
-              },
-              {
-                value: "Lector de cd",
-                label: "Lector de cd",
-              },
-
-              {
-                value: "Impresora",
-                label: "Impresora",
-              },
-            ]}
-          />
-
-          <Select
-            className="input-form"
-            value={estado || undefined}
-            placeholder={"Estado de equipo"}
-            onChange={(e) => setEstado(e)}
-            showSearch
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            allowClear
-            options={[
-              {
-                value: "1",
-                label: "Bueno",
-              },
-              {
-                value: "2",
-                label: "Regular",
-              },
-              {
-                value: "3",
-                label: "Malo",
-              },
-              {
-                value: "4",
-                label: "Muy Malo",
-              },
-              {
-                value: "5",
-                label: "Nuevo",
-              },
-              {
-                value: "6",
-                label: "Chatarra",
-              },
-              {
-                value: "7",
-                label: "RAEE",
-              },
-            ]}
-          />
-        </div>
-        <div
-          style={{ width: "30%", display: "flex", justifyContent: "flex-end" }}
-        >
-          <Button onClick={() => setIsModalOpen(true)}>Registrar</Button>
-        </div>
-      </div>
-      <Table columns={columns} dataSource={search} />
-      {isModalOpen && (
-        <RegistrarEquipo
-          isModalOpen={isModalOpen}
-          setIsOpenModal={setIsModalOpen}
-          getEquipos={getEquipos}
-          editar={editar}
-          setEditar={setEditar}
-        />
-      )}
+      <Tabs defaultActiveKey="1" items={items} style={{ marginTop: "-25px" }} />
     </>
   );
 };
