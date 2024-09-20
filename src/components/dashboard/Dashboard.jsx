@@ -429,7 +429,7 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={8}>
               <Card bordered={false}>
-                <h3>Cantidad por Dependencia</h3>
+                <h3>Cantidad por Oficina</h3>
                 <Table
                   style={{ marginTop: "10px" }}
                   columns={columnsSubDependencias}
@@ -440,7 +440,7 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={8}>
               <Card bordered={false}>
-                <h3>Cantidad por Tipo y Dependencia</h3>
+                <h3>Cantidad por Tipo y Oficina</h3>
                 <Table
                   style={{ marginTop: "10px" }}
                   columns={columnsTipoSubDependencia}
