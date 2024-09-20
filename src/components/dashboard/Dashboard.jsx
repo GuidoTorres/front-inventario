@@ -9,10 +9,12 @@ import { Tabs } from "antd";
 const Dashboard = ({ setTitle }) => {
   const [equipos, setEquipos] = useState([]);
   const [dependencias, setDependencias] = useState([]);
+  const [subDependencias, setSubDependencias] = useState([]);
   useEffect(() => {
     setTitle("Dashboard");
     getEquipos();
     getEstadisticaPorArea();
+    getEstadisticaPorOficina()
   }, []);
 
   const getEquipos = async () => {
@@ -31,6 +33,15 @@ const Dashboard = ({ setTitle }) => {
 
     const info = await response.json();
     if (info) setDependencias(info);
+  };
+
+  const getEstadisticaPorOficina = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE}/equipos/estadistica/subDependencias`
+    );
+
+    const info = await response.json();
+    if (info) setSubDependencias(info);
   };
   const columns = [
     {
@@ -60,6 +71,38 @@ const Dashboard = ({ setTitle }) => {
     {
       title: "Dependencia",
       dataIndex: "nombre_dependencia",
+      align: "center",
+    },
+    {
+      title: "Tipo",
+      dataIndex: "tipo",
+      align: "center",
+    },
+    {
+      title: "Cantidad",
+      dataIndex: "cantidad",
+      align: "center",
+    },
+
+    // Agrega más columnas según los tipos que tengas
+  ];
+
+  const columnsSubDependencias = [
+    {
+      title: "Dependencia",
+      dataIndex: "nombre_sub_dependencia",
+      align: "center",
+    },
+    {
+      title: "Cantidad",
+      dataIndex: "cantidad",
+      align: "center",
+    },
+  ];
+  const columnsTipoSubDependencia = [
+    {
+      title: "Dependencia",
+      dataIndex: "nombre_sub_dependencia",
       align: "center",
     },
     {
@@ -358,6 +401,50 @@ const Dashboard = ({ setTitle }) => {
                   style={{ marginTop: "10px" }}
                   columns={columnsTipoDependencia}
                   dataSource={dependencias?.totalPorTipoPorDependencia}
+                  pagination={true}
+                ></Table>
+              </Card>
+            </Col>
+          </Row>
+        </Flex>
+      ),
+    },
+
+    {
+      key: "6",
+      label: "Por Oficina",
+      children: (
+        <Flex vertical gap={10}>
+          <Row gutter={16}>
+            <Col span={8}>
+              <Card bordered={false}>
+                <h3>Cantidad por Tipo</h3>
+                <Table
+                  style={{ marginTop: "10px" }}
+                  columns={columns}
+                  dataSource={subDependencias?.totalPorTipo}
+                  pagination={false}
+                ></Table>
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card bordered={false}>
+                <h3>Cantidad por Dependencia</h3>
+                <Table
+                  style={{ marginTop: "10px" }}
+                  columns={columnsSubDependencias}
+                  dataSource={subDependencias?.totalPorSubDependencia}
+                  pagination={true}
+                ></Table>
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card bordered={false}>
+                <h3>Cantidad por Tipo y Dependencia</h3>
+                <Table
+                  style={{ marginTop: "10px" }}
+                  columns={columnsTipoSubDependencia}
+                  dataSource={subDependencias?.totalPorTipoPorSubDependencia}
                   pagination={true}
                 ></Table>
               </Card>
