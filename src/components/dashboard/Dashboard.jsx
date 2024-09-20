@@ -85,7 +85,10 @@ const Dashboard = ({ setTitle }) => {
           <Row gutter={16}>
             <Col span={6}>
               <Card bordered={true}>
-                <Typography.Title level={5}> Monitores - {equipos.monitorCantidad}</Typography.Title>
+                <Typography.Title level={5}>
+                  {" "}
+                  Monitores - {equipos.monitorCantidad}
+                </Typography.Title>
                 {equipos.monitor ? (
                   <Grafico data={equipos?.monitor} />
                 ) : (
@@ -95,7 +98,9 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={6}>
               <Card bordered={false}>
-                <Typography.Title level={5}>Impresoras - {equipos.impresorasCantidad}</Typography.Title>
+                <Typography.Title level={5}>
+                  Impresoras - {equipos.impresorasCantidad}
+                </Typography.Title>
                 {equipos.impresoras ? (
                   <Grafico data={equipos?.impresoras} />
                 ) : (
@@ -105,7 +110,10 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={6}>
               <Card bordered={false}>
-                <Typography.Title level={5}> Cpu - {equipos.cpuCantidad}</Typography.Title>
+                <Typography.Title level={5}>
+                  {" "}
+                  Cpu - {equipos.cpuCantidad}
+                </Typography.Title>
 
                 {equipos.cpu ? (
                   <Grafico data={equipos?.cpu} />
@@ -116,7 +124,10 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={6}>
               <Card bordered={false}>
-                <Typography.Title level={5}> Laptops - {equipos.laptopCantidad}</Typography.Title>
+                <Typography.Title level={5}>
+                  {" "}
+                  Laptops - {equipos.laptopCantidad}
+                </Typography.Title>
 
                 {equipos.laptop ? (
                   <Grafico data={equipos?.laptop} />
@@ -127,9 +138,12 @@ const Dashboard = ({ setTitle }) => {
             </Col>
           </Row>
           <Row gutter={16}>
-          <Col span={6}>
+            <Col span={6}>
               <Card bordered={false}>
-                <Typography.Title level={5}> Teclados - {equipos.cantidadTeclado}</Typography.Title>
+                <Typography.Title level={5}>
+                  {" "}
+                  Teclados - {equipos.cantidadTeclado}
+                </Typography.Title>
 
                 {equipos.teclado ? (
                   <Grafico data={equipos?.teclado} />
@@ -140,7 +154,10 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={6}>
               <Card bordered={false}>
-                <Typography.Title level={5}> Mouse - {equipos.cantidadMouse}</Typography.Title>
+                <Typography.Title level={5}>
+                  {" "}
+                  Mouse - {equipos.cantidadMouse}
+                </Typography.Title>
 
                 {equipos.mouse ? (
                   <Grafico data={equipos?.mouse} />
@@ -173,7 +190,7 @@ const Dashboard = ({ setTitle }) => {
       children: (
         <Flex vertical gap={10}>
           <Row gutter={16}>
-            <Col span={10}>
+            <Col span={8}>
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
@@ -186,11 +203,12 @@ const Dashboard = ({ setTitle }) => {
                 )}
               </Card>
             </Col>
-            <Col span={10}>
+            <Col span={8}>
               <Card bordered={true}>
                 <Typography.Title level={5}>
                   {" "}
-                  Procesadores por Generación - {equipos.cpusPorGeneracionCantidad}
+                  Procesadores por Generación -{" "}
+                  {equipos.cpusPorGeneracionCantidad}
                 </Typography.Title>
                 {equipos.cpusPorGeneracion ? (
                   <Grafico data={equipos?.cpusPorGeneracion} />
@@ -200,6 +218,34 @@ const Dashboard = ({ setTitle }) => {
               </Card>
             </Col>
 
+            <Col span={8}>
+              <Card bordered={true}>
+                <Typography.Title level={5}>
+                  {" "}
+                  Sistema Operativo -{" "}
+                  {equipos?.sistema_operativo_cantidad}
+                </Typography.Title>
+                {equipos?.sistema_operativo ? (
+                  <Grafico data={equipos?.sistema_operativo} />
+                ) : (
+                  <p> Sin registros</p>
+                )}
+              </Card>
+            </Col>
+            <Col span={8} style={{marginTop:"10px"}}>
+              <Card bordered={true}>
+                <Typography.Title level={5}>
+                  {" "}
+                  Antivirus -{" "}
+                  {equipos?.antivirus_cantidad}
+                </Typography.Title>
+                {equipos?.antivirus ? (
+                  <Grafico data={equipos?.antivirus} />
+                ) : (
+                  <p> Sin registros</p>
+                )}
+              </Card>
+            </Col>
           </Row>
         </Flex>
       ),
@@ -227,7 +273,8 @@ const Dashboard = ({ setTitle }) => {
             <Col span={10}>
               <Card bordered={false}>
                 <Typography.Title level={5}>
-                  Impresoras por Suministro - {equipos?.tipoImpresoraSuministroCantidad}
+                  Impresoras por Suministro -{" "}
+                  {equipos?.tipoImpresoraSuministroCantidad}
                 </Typography.Title>
                 {equipos.tipoImpresoraSuministro ? (
                   <Grafico data={equipos?.tipoImpresoraSuministro} />
@@ -295,7 +342,7 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={8}>
               <Card bordered={false}>
-              <h3>Cantidad por Dependencia</h3>
+                <h3>Cantidad por Dependencia</h3>
                 <Table
                   style={{ marginTop: "10px" }}
                   columns={columnsDependencias}
@@ -306,7 +353,7 @@ const Dashboard = ({ setTitle }) => {
             </Col>
             <Col span={8}>
               <Card bordered={false}>
-              <h3>Cantidad por Tipo y Dependencia</h3>
+                <h3>Cantidad por Tipo y Dependencia</h3>
                 <Table
                   style={{ marginTop: "10px" }}
                   columns={columnsTipoDependencia}
