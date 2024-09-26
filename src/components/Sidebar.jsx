@@ -58,8 +58,8 @@ const Sidebar = () => {
           { key: "/menu/equipos", icon: <LaptopOutlined />, label: "Equipos" },
           { key: "/dependencias", icon: <SolutionOutlined />, label: "Dependencias" },
           { key: "/subdependencias", icon: <ApartmentOutlined />, label: "Sub Dependencias" },
-          // { key: "/mantenimiento", icon: <ToolOutlined />, label: "Mantenimiento" },
           { key: "/dashboard", icon: <AreaChartOutlined />, label: "Dashboard" },
+          { key: "/reportes", icon: <ToolOutlined />, label: "Reportes" },
         ]}
         onClick={handleMenuClick}
       />

@@ -18,6 +18,7 @@ import { InventarioContext } from "../context/InventarioContext";
 import { ProtectedRoute } from "../routes/ProtectedRoute";
 import MenuEquipos from "../components/equipos/MenuEquipos";
 import ActualizarEquipos from "../components/equipos/ActualizarEquipos";
+import BienesOficina from "../components/reportes/BienesOficina";
 const { Sider, Header, Content } = Layout;
 
 const MainPage = () => {
@@ -114,6 +115,14 @@ const MainPage = () => {
                   element={
                     <ProtectedRoute>
                       <Dashboard setTitle={setTitle} />
+                    </ProtectedRoute>
+                  }
+                />
+                                <Route
+                  path="/reportes"
+                  element={
+                    <ProtectedRoute>
+                      <BienesOficina setTitle={setTitle} />
                     </ProtectedRoute>
                   }
                 />
