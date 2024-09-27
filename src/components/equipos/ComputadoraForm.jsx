@@ -388,7 +388,8 @@ const ComputadoraForm = ({
           <Input
             value={
               editar?.ingreso ? handleDateValue(editar.ingreso) : undefined
-            }            onChange={(e) => handleData(e.target.value, "ingreso")}
+            }
+            onChange={(e) => handleData(e.target.value, "fecha_ingreso")}
             className="input-form"
           />
         </Form.Item>
