@@ -13,6 +13,13 @@ const ImpresoraForm = ({
   editar,
   trabajador,
 }) => {
+  const handleDateValue = (value) => {
+    // Verificar si es una fecha válida utilizando dayjs
+    const isDateValid = dayjs(value, ["YYYY-MM-DD", "YYYY"], true).isValid();
+
+    // Si es una fecha válida, formatearla; si no, devolver el valor original
+    return isDateValid ? dayjs(value).format("YYYY-MM-DD") : value;
+  };
   return (
     <>
       <div className="flex">
@@ -426,8 +433,9 @@ const ImpresoraForm = ({
           ]}
         >
           <Input
-            value={dayjs(editar?.ingreso).format("YYYY-MM-DD") || undefined}
-            onChange={(e) => handleData(e.target.value, "ingreso")}
+            value={
+              editar?.ingreso ? handleDateValue(editar.ingreso) : undefined
+            }            onChange={(e) => handleData(e.target.value, "ingreso")}
             className="input-form"
           />
         </Form.Item>
