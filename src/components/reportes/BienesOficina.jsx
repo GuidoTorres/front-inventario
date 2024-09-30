@@ -23,7 +23,7 @@ const BienesOficina = ({ setTitle }) => {
   const [search, setSearch] = useState([]);
 
   useEffect(() => {
-    setTitle("Equipos");
+    setTitle("Reporte de Equipos");
     getEquipos();
     getSedes();
     getDependencias();
