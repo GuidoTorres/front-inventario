@@ -38,23 +38,31 @@ const Equipos = ({ setTitle }) => {
 
   useEffect(() => {
     setTitle("Equipos");
-    getEquipos();
-    getEquiposInventariados();
+    getEquiposData();
   }, []);
 
-  const getEquipos = async () => {
-    const response = await fetch(`${process.env.REACT_APP_BASE}/equipos`);
-
-    const info = await response.json();
-    if (info) setEquipos(info.data);
-  };
-  const getEquiposInventariados = async () => {
-    const response = await fetch(
-      `${process.env.REACT_APP_BASE}/equipos/inventariados`
-    );
-
-    const info = await response.json();
-    if (info) setInventariados(info.data);
+  const getEquiposData = async () => {
+    try {
+      // Hacer ambas solicitudes en paralelo para optimizar
+      const [equiposResponse, inventariadosResponse] = await Promise.all([
+        fetch(`${process.env.REACT_APP_BASE}/equipos`),
+        fetch(`${process.env.REACT_APP_BASE}/equipos/inventariados`),
+      ]);
+  
+      const equiposInfo = await equiposResponse.json();
+      const inventariadosInfo = await inventariadosResponse.json();
+  
+      // Actualizar los estados solo si ambas respuestas son válidas
+      if (equiposInfo) {
+        setEquipos(equiposInfo.data);
+      }
+  
+      if (inventariadosInfo) {
+        setInventariados(inventariadosInfo.data);
+      }
+    } catch (error) {
+      console.error("Error al obtener datos:", error);
+    }
   };
 
   const columns = [
@@ -154,7 +162,7 @@ const Equipos = ({ setTitle }) => {
       notification.success({
         message: confirm.msg,
       });
-      getEquipos();
+      getEquiposData();
     } else {
       notification.error({
         message: confirm.msg,
@@ -391,7 +399,7 @@ const Equipos = ({ setTitle }) => {
             <RegistrarEquipo
               isModalOpen={isModalOpen}
               setIsOpenModal={setIsModalOpen}
-              getEquipos={getEquipos}
+              getEquipos={getEquiposData}
               editar={editar}
               setEditar={setEditar}
             />
@@ -491,7 +499,7 @@ const Equipos = ({ setTitle }) => {
             <RegistrarEquipo
               isModalOpen={isModalOpen}
               setIsOpenModal={setIsModalOpen}
-              getEquipos={getEquipos}
+              getEquipos={getEquiposData}
               editar={editar}
               setEditar={setEditar}
             />
