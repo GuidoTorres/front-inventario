@@ -69,7 +69,6 @@ const Cargos = ({ setTitle }) => {
     },
   ];
 
-
   const handleEdit = (val) => {
     setIsModalOpen(true);
     setEditar(val);
@@ -140,15 +139,15 @@ const Cargos = ({ setTitle }) => {
         <div
           style={{ width: "30%", display: "flex", justifyContent: "flex-end" }}
         >
-          <Button onClick={() => setIsModalOpen(true)}>Registrar</Button>
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            style={{ backgroundColor: "#4f6f52", color: "white" }}
+          >
+            Registrar
+          </Button>
         </div>
       </div>
-      <Table
-        columns={columns}
-        dataSource={search}
-
-      />
-      ;
+      <Table columns={columns} dataSource={search} />;
       {isModalOpen && (
         <RegistrarCargos
           isModalOpen={isModalOpen}

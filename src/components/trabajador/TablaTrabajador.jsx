@@ -216,7 +216,6 @@ const TablaTrabajador = ({ setTitle }) => {
   };
 
   const handleState = (data) => {
-
     const filterData = trabajadores.filter((item) => item.estado == data);
     setSearch(filterData);
   };
@@ -260,15 +259,24 @@ const TablaTrabajador = ({ setTitle }) => {
                 value: "1",
                 label: "Activos",
               },
- 
             ]}
           />
         </div>
         <div
-          style={{ width: "30%", display: "flex", justifyContent: "flex-end" }}
+          style={{ width: "30%", display: "flex", justifyContent: "flex-end", gap:"5px" }}
         >
-          <Button onClick={() => setIsModalOpen(true)}>Registrar</Button>
-          <Button onClick={updateRegisters}>Actualizar Registros</Button>
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            style={{ backgroundColor: "#4f6f52", color: "white" }}
+          >
+            Registrar
+          </Button>
+          <Button
+            onClick={updateRegisters}
+            style={{ backgroundColor: "#4f6f52", color: "white" }}
+          >
+            Actualizar Registros
+          </Button>
         </div>
       </div>
       <Table columns={columns} dataSource={search} onChange={onChange} />

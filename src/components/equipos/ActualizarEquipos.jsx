@@ -194,13 +194,16 @@ const ActualizarEquipos = ({ setTitle }) => {
 
   const actualizarEquipos = async () => {
     const newData = selectedRows.map(({ id, ...rest }) => rest);
-    const response = await fetch(`${process.env.REACT_APP_BASE}/equipos/varios`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newData),
-    });
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE}/equipos/varios`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newData),
+      }
+    );
 
     const confirm = await response.json();
     if (response.status === 200) {
@@ -218,28 +221,24 @@ const ActualizarEquipos = ({ setTitle }) => {
   const expandedRowRenderPrueba = (record) => {
     const columns = [
       {
-        title: 'Encargado',
-        dataIndex: 'usuario_final',
-        key: 'usuario_final',
+        title: "Encargado",
+        dataIndex: "usuario_final",
+        key: "usuario_final",
         align: "center",
       },
       {
-        title: 'Proveeedor',
-        dataIndex: 'proveedor',
-        key: 'proveedor',
+        title: "Proveeedor",
+        dataIndex: "proveedor",
+        key: "proveedor",
         align: "center",
-
       },
 
       {
-        title: 'Precio',
-        dataIndex: 'valor_compra',
-        key: 'valor_compra',
+        title: "Precio",
+        dataIndex: "valor_compra",
+        key: "valor_compra",
         align: "center",
-
       },
-
-
     ];
 
     return <Table columns={columns} dataSource={[record]} pagination={false} />;
@@ -399,7 +398,10 @@ const ActualizarEquipos = ({ setTitle }) => {
         <div
           style={{ width: "30%", display: "flex", justifyContent: "flex-end" }}
         >
-          <Button type="primary" onClick={actualizarEquipos}>
+          <Button
+            onClick={actualizarEquipos}
+            style={{ backgroundColor: "#4f6f52", color: "white" }}
+          >
             Guardar
           </Button>
         </div>
@@ -414,9 +416,9 @@ const ActualizarEquipos = ({ setTitle }) => {
           ...item,
           key: item.id || index,
         }))}
-          expandable={{
+        expandable={{
           expandedRowRender: (record) => expandedRowRenderPrueba(record),
-          defaultExpandedRowKeys: ['0'],
+          defaultExpandedRowKeys: ["0"],
         }}
       />
       {isModalOpen && (

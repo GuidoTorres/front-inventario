@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Select, Table, Tag } from "antd";
+import { Button, Card, Col, Row, Select, Statistic, Table, Tag } from "antd";
+import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 
 const BienesOficina = ({ setTitle }) => {
   const [equipos, setEquipos] = useState([]);
@@ -11,6 +12,7 @@ const BienesOficina = ({ setTitle }) => {
   const [ubicacion, setUbicacion] = useState([]);
   const [area, setArea] = useState([]);
   const [oficina, setOficina] = useState([]);
+  const [estadisticas, setEstadisticas] = useState([]);
 
   const [dataValues, setDataValues] = useState({
     sede_id: "",
@@ -91,7 +93,7 @@ const BienesOficina = ({ setTitle }) => {
       render: (_, record) => (
         <>
           {record.estado_conserv === "1" || record.estado_conserv === "1" ? (
-            <Tag color="green">Bueno</Tag>
+            <Tag color="cyan">Bueno</Tag>
           ) : record.estado_conserv === "2" || record.estado_conserv === "2" ? (
             <Tag color="blue">Regular</Tag>
           ) : record.estado_conserv === "3" || record.estado_conserv === "3" ? (
@@ -116,7 +118,8 @@ const BienesOficina = ({ setTitle }) => {
       if (
         !dataValues.sede_id &&
         !dataValues.dependencia_id &&
-        !dataValues.oficina_id
+        !dataValues.oficina_id &&
+        !tipo
       ) {
         return equipos;
       } else {
@@ -131,18 +134,42 @@ const BienesOficina = ({ setTitle }) => {
           const coincideOficina = dataValues.oficina_id
             ? dataValues.oficina_id == item.sub_dependencia_id
             : true;
+          const coincidenciaTipo = tipo ? tipo == item.tipo : true;
 
           // Un elemento pasa el filtro si todos los criterios coinciden
-          return coincideSede && coincideArea && coincideOficina;
+          return (
+            coincideSede && coincideArea && coincideOficina && coincidenciaTipo
+          );
         });
 
         return resultadosFiltrados;
       }
     };
+    const resultados = filterData();
+
+    // Contar los registros por tipo y convertirlos a un array de objetos { titulo, cantidad }
+    const conteoPorTipo = resultados.reduce((acc, item) => {
+      const { tipo } = item;
+      if (acc[tipo]) {
+        acc[tipo] += 1; // Incrementar el conteo si el tipo ya existe
+      } else {
+        acc[tipo] = 1; // Inicializar el conteo si el tipo no existe
+      }
+      return acc;
+    }, {});
+
+    // Convertir el objeto de conteos en un array de { titulo, cantidad }
+    const estadisticasArray = Object.keys(conteoPorTipo).map((tipo) => ({
+      titulo: tipo,
+      cantidad: conteoPorTipo[tipo],
+    }));
+
+    // Actualizar el estado con las estadísticas
+    setEstadisticas(estadisticasArray);
 
     setSearch(filterData());
   };
-
+  console.log(estadisticas);
   const filtrarSedes = () => {
     // Filtrar dependencias según la sede seleccionada
     const filterAreas = dependencia.filter(
@@ -173,16 +200,115 @@ const BienesOficina = ({ setTitle }) => {
 
   useEffect(() => {
     filtrar();
-  }, [dataValues, equipos]);
+  }, [dataValues, equipos, tipo]);
+
+  const optionsFilter = [
+    {
+      value: "Access point",
+      label: "Access point",
+    },
+    {
+      value: "Disco Duro",
+      label: "Disco Duro",
+    },
+    {
+      value: "Estabilizador",
+      label: "Estabilizador",
+    },
+    {
+      value: "Proyector",
+      label: "Proyector",
+    },
+
+    {
+      value: "Cpu",
+      label: "Cpu",
+    },
+    {
+      value: "Monitor",
+      label: "Monitor",
+    },
+    {
+      value: "Laptop",
+      label: "Laptop",
+    },
+    {
+      value: "Telefono",
+      label: "Teléfono",
+    },
+    {
+      value: "Teclado",
+      label: "Teclado",
+    },
+    {
+      value: "Mouse",
+      label: "Mouse",
+    },
+    {
+      value: "Switch",
+      label: "Switch",
+    },
+    {
+      value: "Router",
+      label: "Router",
+    },
+    {
+      value: "Servidor",
+      label: "Servidor",
+    },
+    {
+      value: "Lector de cd",
+      label: "Lector de cd",
+    },
+
+    {
+      value: "Impresora",
+      label: "Impresora",
+    },
+  ];
+
+  const ordenPersonalizado = ["Monitor", "Cpu", "Laptop", "Impresora", "Telefono", "Escaner"];
 
   return (
     <>
+      <Row gutter={16} style={{ marginTop: "-20px" }}>
+        {estadisticas &&
+          estadisticas
+            .filter(
+              (item) =>
+                item.titulo !== "Proyector" &&
+                item.titulo !== "Estabilizador" &&
+                item.titulo !== "Switch" &&
+                item.titulo !== "Teclado" &&
+                item.titulo !== "Mouse"
+            )
+            .sort(
+              (a, b) =>
+                ordenPersonalizado.indexOf(a.titulo) -
+                ordenPersonalizado.indexOf(b.titulo)
+            )
+            .map((item, index) => (
+              <Col span={3} key={index}>
+                <Card bordered={true}>
+                  <Statistic
+                    title={item?.titulo}
+                    value={item?.cantidad}
+                    valueStyle={{
+                      color: "#4f6f52",
+                    }}
+                  />
+                </Card>
+              </Col>
+            ))}
+      </Row>
+
       <div
         style={{
           width: "100%",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginTop: "10px",
         }}
       >
         <div
@@ -257,14 +383,26 @@ const BienesOficina = ({ setTitle }) => {
               };
             })}
           />
+          <Select
+            className="input-form"
+            value={tipo || undefined}
+            placeholder={"Tipo de equipo"}
+            onChange={(e) => setTipo(e)}
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            allowClear
+            options={optionsFilter.map((item) => item)}
+          />
 
           <Button
-            type="primary"
-            onClick={() =>
-              setDataValues({
-                
-              })
-            }
+            style={{ backgroundColor: "#4f6f52", color: "white" }}
+            onClick={() => {
+              setDataValues({});
+              setTipo("");
+            }}
           >
             Limpiar Filtros
           </Button>
@@ -277,11 +415,16 @@ const BienesOficina = ({ setTitle }) => {
           marginTop: "20px",
         }}
       >
-        <label htmlFor="">
+        <Tag color="#4f6f52">Total de equipos: {search.length}</Tag>
+        {/* <label htmlFor="">
           <strong>Total de equipos: {search.length}</strong>{" "}
-        </label>
+        </label> */}
       </div>
-      <Table columns={columns} dataSource={search} />
+      <Table
+        columns={columns}
+        dataSource={search}
+        style={{ marginTop: "10px" }}
+      />
     </>
   );
 };

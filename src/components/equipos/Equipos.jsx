@@ -369,7 +369,12 @@ const Equipos = ({ setTitle }) => {
                 justifyContent: "flex-end",
               }}
             >
-              <Button onClick={() => setIsModalOpen(true)}>Registrar</Button>
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                style={{ backgroundColor: "#4f6f52", color: "white" }}
+              >
+                Registrar
+              </Button>
             </div>
           </div>
           <div
@@ -379,11 +384,9 @@ const Equipos = ({ setTitle }) => {
               marginTop: "20px",
             }}
           >
-            <label htmlFor="">
-              <strong>Total de equipos: {search.length}</strong>{" "}
-            </label>
+            <Tag color="#4f6f52">Total de equipos: {search.length}</Tag>
           </div>
-          <Table columns={columns} dataSource={search} />
+          <Table columns={columns} dataSource={search} style={{marginTop:"5px"}}/>
           {isModalOpen && (
             <RegistrarEquipo
               isModalOpen={isModalOpen}
@@ -462,7 +465,12 @@ const Equipos = ({ setTitle }) => {
                 justifyContent: "flex-end",
               }}
             >
-              <Button onClick={() => setIsModalOpen(true)}>Registrar</Button>
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                style={{ backgroundColor: "#4f6f52", color: "white" }}
+              >
+                Registrar
+              </Button>
             </div>
           </div>
           <div
@@ -472,11 +480,13 @@ const Equipos = ({ setTitle }) => {
               marginTop: "20px",
             }}
           >
-            <label htmlFor="">
-              <strong>Total de equipos: {search2.length}</strong>{" "}
-            </label>
+            <Tag color="#4f6f52">Total de equipos: {search2.length}</Tag>
           </div>
-          <Table columns={columns} dataSource={search2} />
+          <Table
+            columns={columns}
+            dataSource={search2}
+            style={{ marginTop: "5px" }}
+          />
           {isModalOpen && (
             <RegistrarEquipo
               isModalOpen={isModalOpen}
