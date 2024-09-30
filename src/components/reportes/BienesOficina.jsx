@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Row, Select, Statistic, Table, Tag } from "antd";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 
 const BienesOficina = ({ setTitle }) => {
   const [equipos, setEquipos] = useState([]);
@@ -84,6 +85,11 @@ const BienesOficina = ({ setTitle }) => {
     {
       title: "Usuario",
       dataIndex: "usuario_actual",
+      align: "center",
+    },
+    {
+      title: "Año ingreso",
+      render: (_, record) => dayjs(record?.fecha_ingreso).format("YYYY"),
       align: "center",
     },
     {
