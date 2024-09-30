@@ -60,6 +60,14 @@ const BienesOficina = ({ setTitle }) => {
     if (info) setUbicacion(info.data);
   };
 
+  const handleDateValue = (value) => {
+    // Verificar si es una fecha válida utilizando dayjs
+    const isDateValid = dayjs(value, ["YYYY-MM-DD", "YYYY"], true).isValid();
+
+    // Si es una fecha válida, formatearla; si no, devolver el valor original
+    return isDateValid ? dayjs(value).format("YYYY") : value;
+  };
+
   const columns = [
     {
       title: "Nro",
@@ -89,7 +97,7 @@ const BienesOficina = ({ setTitle }) => {
     },
     {
       title: "Año ingreso",
-      render: (_, record) => dayjs(record?.fecha_ingreso).format("YYYY"),
+      render: (_, record) => handleDateValue(record?.fecha_ingreso),
       align: "center",
     },
     {
@@ -175,7 +183,7 @@ const BienesOficina = ({ setTitle }) => {
 
     setSearch(filterData());
   };
-  console.log(estadisticas);
+  console.log(search);
   const filtrarSedes = () => {
     // Filtrar dependencias según la sede seleccionada
     const filterAreas = dependencia.filter(
