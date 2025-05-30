@@ -1,17 +1,52 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Flex,
-  Popconfirm,
-  Select,
-  Table,
-  Tag,
-  notification,
-} from "antd";
+import { Button, Select, Table, Tag, notification } from "antd";
 import RegistrarEquipo from "./RegistrarEquipo";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 import dayjs from "dayjs";
+
+// 1. Definimos un diccionario de tipos → palabras clave
+const TIPO_KEYWORDS = {
+  Impresora: ["IMPRESORA", "PLOTTER"],
+  Monitor: ["MONITOR"],
+  Laptop: ["LAPTOP", "PORTÁTIL", "NOTEBOOK", "COMPUTADORA PERSONAL PORTATIL	"],
+  Teclado: ["TECLADO"],
+  Mouse: ["MOUSE", "RATÓN"],
+  Servidor: ["SERVIDOR"],
+  Proyector: ["PROYECTOR"],
+  Cpu: ["CPU", "UNIDAD CENTRAL DE PROCESO"],
+  DiscoDuro: ["DISCO DURO"],
+  Estabilizador: ["ESTABILIZADOR"],
+  Switch: ["SWITCH"],
+  Router: ["ROUTER"],
+  LectorCd: ["LECTOR DE CD", "LECTORA", "CD-ROM"],
+  Telefono: ["TELÉFONO", "TELEFONO"],
+  AccessPoint: ["ACCESS POINT", "AP"],
+  Scanner: ["ESCANER", "CAPTURADOR DE IMAGEN"],
+};
+
+// 2. Función para detectar todos los tipos que aparezcan
+function detectTipos(descripcion = "") {
+  // Normalizamos: sin tildes y en mayúsculas
+  const desc = descripcion
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+
+  // Separamos por -, coma, slash, pipe, etc.
+  const partes = desc.split(/[-,\/|]/).map((p) => p.trim());
+
+  const tiposEncontrados = new Set();
+
+  partes.forEach((parte) => {
+    for (const [tipo, keys] of Object.entries(TIPO_KEYWORDS)) {
+      if (keys.some((k) => parte.includes(k))) {
+        tiposEncontrados.add(tipo);
+      }
+    }
+  });
+
+  return Array.from(tiposEncontrados);
+}
 
 const ActualizarEquipos = ({ setTitle }) => {
   const [equipos, setEquipos] = useState([]);
@@ -34,7 +69,19 @@ const ActualizarEquipos = ({ setTitle }) => {
     );
 
     const info = await response.json();
-    if (info) setEquipos(info.data);
+
+    if (info) {
+      const enriquecidos = info?.data?.map((item) => {
+        const tipos = detectTipos(item.DESCRIPCION);
+        // Si solo quieres un tipo (el primero), podrías hacer:
+        // const tipo = tipos[0] || '';
+        return {
+          ...item,
+          tipo: tipos[0], // o un único valor
+        };
+      });
+      setEquipos(enriquecidos);
+    }
   };
 
   const columns = [
@@ -47,32 +94,32 @@ const ActualizarEquipos = ({ setTitle }) => {
     {
       key: "sbn",
       title: "SBN",
-      dataIndex: "sbn",
+      dataIndex: "CODIGO_ACTIVO",
       align: "center",
     },
 
     {
       key: "descripcion",
       title: "Descripción",
-      dataIndex: "descripcion",
+      dataIndex: "DESCRIPCION",
       align: "center",
     },
     {
       key: "marca",
       title: "Marca",
-      dataIndex: "marca",
+      dataIndex: "MARCA",
       align: "center",
     },
     {
       key: "modelo",
       title: "Modelo",
-      dataIndex: "modelo",
+      dataIndex: "MODELO",
       align: "center",
     },
     {
       key: "fecha_ingreso",
       title: "Fecha ingreso",
-      render: (_, record) => dayjs(record.fecha_ingreso).format("DD-MM-YYYY"),
+      render: (_, record) => dayjs(record.FECHA_REG).format("DD-MM-YYYY"),
       align: "center",
     },
 
@@ -85,7 +132,7 @@ const ActualizarEquipos = ({ setTitle }) => {
         let color = "green";
         let text = "Bueno";
 
-        switch (record.estado_conserv) {
+        switch (record.ESTADO_CONSERV) {
           case "1":
             color = "green";
             text = "Bueno";
@@ -123,34 +170,6 @@ const ActualizarEquipos = ({ setTitle }) => {
     },
   ];
 
-  const handleEdit = (val) => {
-    setIsModalOpen(true);
-    setEditar(val);
-  };
-  const handleDelete = async (id) => {
-    const response = await fetch(
-      `http://10.30.1.43:8085/api/v1/equipos/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const confirm = await response.json();
-
-    if (response.status === 200) {
-      notification.success({
-        message: confirm.msg,
-      });
-      getEquipos();
-    } else {
-      notification.error({
-        message: confirm.msg,
-      });
-    }
-  };
-
   const filtrar = () => {
     const filterData = () => {
       // Filtrar solo si al menos uno de los criterios de búsqueda está presente
@@ -160,15 +179,17 @@ const ActualizarEquipos = ({ setTitle }) => {
         // Filtrar equipos según los criterios proporcionados
         const resultadosFiltrados = equipos.filter((item) => {
           const coincideBuscar = buscar
-            ? item?.sbn?.toLowerCase().includes(buscar?.toLowerCase()) ||
-              item?.marca?.toLowerCase().includes(buscar?.toLowerCase()) ||
-              item?.descripcion?.toLowerCase().includes(buscar?.toLowerCase())
+            ? item?.CODIGO_ACTIVO?.toLowerCase().includes(
+                buscar?.toLowerCase()
+              ) ||
+              item?.MARCA?.toLowerCase().includes(buscar?.toLowerCase()) ||
+              item?.DESCRIPCION?.toLowerCase().includes(buscar?.toLowerCase())
             : true;
           const coincideTipo = tipo
             ? item?.tipo?.toLowerCase() === tipo?.toLowerCase()
             : true;
           const coincideEstado = estado
-            ? item?.estado?.toLowerCase() === estado?.toLowerCase()
+            ? item?.ESTADO_CONSERV?.toLowerCase() === estado?.toLowerCase()
             : true;
 
           // Un elemento pasa el filtro si todos los criterios coinciden
@@ -222,22 +243,15 @@ const ActualizarEquipos = ({ setTitle }) => {
     const columns = [
       {
         title: "Encargado",
-        dataIndex: "usuario_final",
-        key: "usuario_final",
+        dataIndex: "nombre_completo",
+        key: "nombre_completo",
         align: "center",
       },
       {
-        title: "Proveeedor",
-        dataIndex: "proveedor",
-        key: "proveedor",
+        title: "Tipo",
+        key: "tipo",
         align: "center",
-      },
-
-      {
-        title: "Precio",
-        dataIndex: "valor_compra",
-        key: "valor_compra",
-        align: "center",
+        render: (_, record) => { return <Tag color="green">{record.tipo}</Tag>}
       },
     ];
 
