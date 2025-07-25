@@ -22,21 +22,16 @@ const Sidebar = () => {
   // Actualizar la clave seleccionada en función de la ruta actual
   useEffect(() => {
     const path = location.pathname;
-    setSelectedKey(path);
+    if (path === "/equipos" || path === "/actualizar/equipos") {
+      setSelectedKey("/menu/equipos");
+    } else {
+      setSelectedKey(path);
+    }
   }, [location]);
 
   const handleMenuClick = (e) => {
     // Maneja la selección del menú aquí
     const key = e.key;
-  
-    // Si tienes varias rutas que deberían seleccionar el mismo ítem
-    if (key === "/equipos" || key === "/actualizar/equipos") {
-      setSelectedKey("/menu/equipos");
-    } else {
-      setSelectedKey(key);
-    }
-  
-    // Navega a la ruta seleccionada
     navigate(key);
   };
 

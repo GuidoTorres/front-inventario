@@ -2,12 +2,9 @@ import { LaptopOutlined, SyncOutlined } from "@ant-design/icons";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const MenuEquipos = ({ setTitle }) => {
+const MenuEquipos = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setTitle("Equipos");
-  }, []);
   return (
     <div
       style={{
@@ -61,7 +58,7 @@ const MenuEquipos = ({ setTitle }) => {
         </div>
         <p htmlFor="" style={{ marginTop: "10px", fontSize: "15px" }}>
           {" "}
-          <strong>Actualizar equipos</strong>
+          <strong>Nuevos equipos</strong>
         </p>
       </section>
     </div>

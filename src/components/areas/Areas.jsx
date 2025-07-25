@@ -4,13 +4,12 @@ import RegistrarAreas from "./RegistrarAreas";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 
-const Areas = ({ setTitle }) => {
+const Areas = () => {
   const [areas, setAreas] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editar, setEditar] = useState();
   const [search, setSearch] = useState();
   useEffect(() => {
-    setTitle("Sub Dependencias");
     getAreas();
   }, []);
   const getAreas = async () => {
@@ -158,7 +157,7 @@ const Areas = ({ setTitle }) => {
           </Button>
         </div>
       </div>
-      <Table columns={columns} dataSource={search} />;
+      <Table columns={columns} dataSource={search} />
       {isModalOpen && (
         <RegistrarAreas
           isModalOpen={isModalOpen}
@@ -169,7 +168,7 @@ const Areas = ({ setTitle }) => {
         />
       )}
     </>
-  );
-};
+  )
+}
 
 export default Areas;

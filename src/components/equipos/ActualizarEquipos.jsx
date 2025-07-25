@@ -48,7 +48,7 @@ function detectTipos(descripcion = "") {
   return Array.from(tiposEncontrados);
 }
 
-const ActualizarEquipos = ({ setTitle }) => {
+const ActualizarEquipos = () => {
   const [equipos, setEquipos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editar, setEditar] = useState();
@@ -57,9 +57,10 @@ const ActualizarEquipos = ({ setTitle }) => {
   const [estado, setEstado] = useState("");
   const [search, setSearch] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  // Nuevo estado para animación de desaparición
+  const [disappearingRows, setDisappearingRows] = useState(new Set());
 
   useEffect(() => {
-    setTitle("Actualizar Equipos");
     getEquipos();
   }, []);
 
@@ -80,7 +81,9 @@ const ActualizarEquipos = ({ setTitle }) => {
           tipo: tipos[0], // o un único valor
         };
       });
-      setEquipos(enriquecidos);
+      // Ordenar los equipos por ID descendente
+      const equiposOrdenados = enriquecidos.sort((a, b) => b.id - a.id);
+      setEquipos(equiposOrdenados);
     }
   };
 
@@ -214,29 +217,83 @@ const ActualizarEquipos = ({ setTitle }) => {
   };
 
   const actualizarEquipos = async () => {
-    const newData = selectedRows.map(({ id, ...rest }) => rest);
-    const response = await fetch(
-      `${process.env.REACT_APP_BASE}/equipos/varios`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newData),
-      }
-    );
-
-    const confirm = await response.json();
-    if (response.status === 200) {
-      notification.success({
-        message: confirm.msg,
+    if (selectedRows.length === 0) {
+      notification.warning({
+        message: "Selecciona al menos un equipo para actualizar",
       });
-      getEquipos();
-    } else {
-      notification.error({
-        message: confirm.msg,
-      });
+      return;
     }
+
+    // Marcar las filas seleccionadas para animación de desaparición
+    const selectedKeys = selectedRows.map(row => row.key || row.id);
+    setDisappearingRows(new Set(selectedKeys));
+
+    const newData = selectedRows.map((item) => {
+      return {
+        sbn: item.SBN,
+        descripcion: item.DESCRIPCION,
+        marca: item.MARCA,
+        modelo: item.MODELO,
+        fecha_ingreso: dayjs().format('YYYY'),
+        estado_conserv: item.ESTADO_CONSERV,
+        trabajador_id: item.trabajador_id,
+        secuencia: item.secuencia,
+        estado: 'Nuevo'
+      };
+    });
+
+    // Esperar un poco para que se vea la animación antes de hacer la petición
+    setTimeout(async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BASE}/equipos/varios`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newData),
+          }
+        );
+
+        const confirm = await response.json();
+        
+        if (response.status === 200) {
+          notification.success({
+            message: confirm.msg,
+          });
+          
+          // Limpiar selección
+          setSelectedRows([]);
+          
+          // Esperar un poco más para completar la animación antes de recargar
+          setTimeout(() => {
+            getEquipos();
+            setDisappearingRows(new Set());
+          }, 500);
+          
+        } else {
+          notification.error({
+            message: confirm.msg,
+          });
+          setDisappearingRows(new Set());
+        }
+      } catch (error) {
+        notification.error({
+          message: "Error al actualizar equipos",
+        });
+        setDisappearingRows(new Set());
+      }
+    }, 100);
+  };
+
+  // Función para obtener el estilo de fila con animación de desaparición
+  const getRowClassName = (record) => {
+    const key = record.key || record.id;
+    if (disappearingRows.has(key)) {
+      return 'row-disappear-animation';
+    }
+    return '';
   };
 
   const expandedRowRenderPrueba = (record) => {
@@ -260,11 +317,43 @@ const ActualizarEquipos = ({ setTitle }) => {
 
   return (
     <>
+      {/* Estilos CSS para la animación de desaparición */}
+      <style jsx>{`
+        .row-disappear-animation {
+          animation: fadeOutSlide 1s ease-in-out forwards;
+        }
+        
+        @keyframes fadeOutSlide {
+          0% { 
+            opacity: 1; 
+            transform: translateX(0) scale(1);
+            background-color: #fff;
+          }
+          30% { 
+            background-color: #52c41a;
+            transform: scale(1.02);
+          }
+          70% { 
+            opacity: 0.3; 
+            transform: translateX(-20px) scale(0.98);
+            background-color: #f6ffed;
+          }
+          100% { 
+            opacity: 0; 
+            transform: translateX(-50px) scale(0.95);
+            height: 0;
+            padding: 0;
+            margin: 0;
+          }
+        }
+      `}</style>
+
       <div style={{ display: "flex", justifyContent: "flex-start" }}>
         <label htmlFor="">
           <strong>Total de equipos: {equipos?.length}</strong>{" "}
         </label>
       </div>
+      
       <div
         style={{
           marginTop: "10px",
@@ -430,6 +519,7 @@ const ActualizarEquipos = ({ setTitle }) => {
           ...item,
           key: item.id || index,
         }))}
+        rowClassName={getRowClassName}
         expandable={{
           expandedRowRender: (record) => expandedRowRenderPrueba(record),
           defaultExpandedRowKeys: ["0"],

@@ -6,12 +6,11 @@ import Typography from "antd/es/typography/Typography";
 import GraficoBarras from "../../Graficos/GraficoBarras";
 import { Tabs } from "antd";
 
-const Dashboard = ({ setTitle }) => {
+const Dashboard = () => {
   const [equipos, setEquipos] = useState([]);
   const [dependencias, setDependencias] = useState([]);
   const [subDependencias, setSubDependencias] = useState([]);
   useEffect(() => {
-    setTitle("Dashboard");
     getEquipos();
     getEstadisticaPorArea();
     getEstadisticaPorOficina()

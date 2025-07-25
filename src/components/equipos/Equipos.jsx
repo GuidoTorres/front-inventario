@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Badge, // Importar Badge
   Button,
   Flex,
   Popconfirm,
@@ -21,7 +22,10 @@ import {
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 import { Tabs } from "antd";
-const Equipos = ({ setTitle }) => {
+import { useDebounce } from "../../hooks/useDebounce";
+import dayjs from 'dayjs'; // Importar dayjs
+
+const Equipos = () => {
   const [equipos, setEquipos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editar, setEditar] = useState();
@@ -33,35 +37,95 @@ const Equipos = ({ setTitle }) => {
   const [search2, setSearch2] = useState([]);
   const [tipo2, setTipo2] = useState("");
   const [estado2, setEstado2] = useState("");
-
   const [inventariados, setInventariados] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const debouncedSearch = useDebounce(buscar, 500);
+  const debouncedSearch2 = useDebounce(buscar2, 500);
+
+  // ✅ Agregar estados para paginación
+  // ✅ Cambiar solo los estados de paginación del frontend a 10
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10, // ✅ Cambiar de 50 a 10
+    total: 0,
+  });
+  const [inventariadosPagination, setInventariadosPagination] = useState({
+    current: 1,
+    pageSize: 10, // ✅ Cambiar de 50 a 10
+    total: 0,
+  });
 
   useEffect(() => {
-    setTitle("Equipos");
-    getEquiposData();
+    getEquiposData(1, pagination.pageSize, debouncedSearch, tipo, estado);
+    getInventariadosData(1, inventariadosPagination.pageSize, debouncedSearch2, tipo2, estado2);
   }, []);
 
-  const getEquiposData = async () => {
+  useEffect(() => {
+    getEquiposData(1, pagination.pageSize, debouncedSearch, tipo, estado);
+  }, [debouncedSearch, tipo, estado]);
+
+  useEffect(() => {
+    getInventariadosData(1, inventariadosPagination.pageSize, debouncedSearch2, tipo2, estado2);
+  }, [debouncedSearch2, tipo2, estado2]);
+
+
+  // ✅ Actualizar la función getEquiposData
+  const getEquiposData = async (page = 1, pageSize = 10, search = '', tipo = '', estado = '') => { // ✅ Cambiar de 50 a 10
+    setLoading(true);
     try {
-      // Hacer ambas solicitudes en paralelo para optimizar
-      const [equiposResponse, inventariadosResponse] = await Promise.all([
-        fetch(`${process.env.REACT_APP_BASE}/equipos`),
-        fetch(`${process.env.REACT_APP_BASE}/equipos/inventariados`),
-      ]);
-  
-      const equiposInfo = await equiposResponse.json();
-      const inventariadosInfo = await inventariadosResponse.json();
-  
-      // Actualizar los estados solo si ambas respuestas son válidas
+      const params = new URLSearchParams();
+      params.append('page', page);
+      params.append('limit', pageSize);
+      if (search) params.append('search', search);
+      if (tipo) params.append('tipo', tipo);
+      if (estado) params.append('estado', estado);
+
+      const response = await fetch(`${process.env.REACT_APP_BASE}/equipos?${params.toString()}`);
+      const equiposInfo = await response.json();
+
       if (equiposInfo) {
         setEquipos(equiposInfo.data);
-      }
-  
-      if (inventariadosInfo) {
-        setInventariados(inventariadosInfo.data);
+        setSearch(equiposInfo.data);
+        setPagination({
+          current: equiposInfo.pagination?.page || 1,
+          pageSize: equiposInfo.pagination?.limit || 10, // ✅ Cambiar de 50 a 10
+          total: equiposInfo.pagination?.total || 0,
+        });
       }
     } catch (error) {
-      console.error("Error al obtener datos:", error);
+      console.error("Error al obtener datos de equipos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getInventariadosData = async (page = 1, pageSize = 10, search = '', tipo = '', estado = '') => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.append('page', page);
+      params.append('limit', pageSize);
+      if (search) params.append('search', search);
+      if (tipo) params.append('tipo', tipo);
+      if (estado) params.append('estado', estado);
+
+      const response = await fetch(`${process.env.REACT_APP_BASE}/equipos/inventariados?${params.toString()}`);
+      const inventariadosInfo = await response.json();
+
+      if (inventariadosInfo) {
+        setInventariados(inventariadosInfo.data);
+        setSearch2(inventariadosInfo.data);
+        setInventariadosPagination({
+          current: inventariadosInfo.pagination?.page || 1,
+          pageSize: inventariadosInfo.pagination?.limit || 10, // ✅ Cambiar de 50 a 10
+          total: inventariadosInfo.pagination?.total || 0,
+        });
+      }
+    } catch (error) {
+      console.error("Error al obtener datos de inventariados:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,6 +134,28 @@ const Equipos = ({ setTitle }) => {
       title: "Nro",
       dataIndex: "nro",
       align: "center",
+      render: (text, record) => {
+        const now = dayjs();
+        const createdAt = dayjs(record.createdAt);
+        const updatedAt = dayjs(record.updatedAt);
+        const diffCreatedHours = now.diff(createdAt, 'hour');
+        const diffUpdatedHours = now.diff(updatedAt, 'hour');
+
+        let badgeStatus = null;
+
+        if (diffCreatedHours <= 24) {
+          badgeStatus = "success"; // Verde para nuevos
+        } else if (diffUpdatedHours <= 24) {
+          badgeStatus = "warning"; // Amarillo para actualizados
+        }
+
+        return (
+          <Flex align="center" justify="center" gap={8}>
+            <span>{text}</span>
+            {badgeStatus && <Badge status={badgeStatus} style={{ transform: 'scale(1.5)' }} />}
+          </Flex>
+        );
+      },
     },
     {
       title: "SBN",
@@ -126,7 +212,7 @@ const Equipos = ({ setTitle }) => {
             <EditOutlined />
           </Button>
           <Popconfirm
-            title="Eliminar trabajador"
+            title="Eliminar equipo"
             description="Estas seguro de eliminar?"
             onConfirm={() => handleDelete(record.id)}
             // onCancel={cancel}
@@ -310,6 +396,37 @@ const Equipos = ({ setTitle }) => {
     },
   ];
 
+  const optionsFilterEstado = [
+    {
+      value: "1",
+      label: "Bueno",
+    },
+    {
+      value: "2",
+      label: "Regular",
+    },
+    {
+      value: "3",
+      label: "Malo",
+    },
+    {
+      value: "4",
+      label: "Muy Malo",
+    },
+    {
+      value: "5",
+      label: "Nuevo",
+    },
+    {
+      value: "6",
+      label: "Chatarra",
+    },
+    {
+      value: "7",
+      label: "RAEE",
+    },
+  ];
+
   const items = [
     {
       key: "1",
@@ -367,7 +484,7 @@ const Equipos = ({ setTitle }) => {
                     .includes(input.toLowerCase())
                 }
                 allowClear
-                options={optionsFilter.map((item) => item)}
+                options={optionsFilterEstado.map((item) => item)}
               />
             </div>
             <div
@@ -392,9 +509,31 @@ const Equipos = ({ setTitle }) => {
               marginTop: "20px",
             }}
           >
-            <Tag color="#4f6f52">Total de equipos: {search.length}</Tag>
+            <Tag color="#4f6f52">Total de equipos: {pagination.total}</Tag>
           </div>
-          <Table columns={columns} dataSource={search} style={{marginTop:"5px"}}/>
+          <Table 
+            columns={columns} 
+            dataSource={search} // Usar directamente `search` que viene de la API
+            loading={loading}
+            style={{marginTop:"5px"}}
+              // En ambas tablas, actualizar la configuración de paginación:
+              pagination={{
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                total: pagination.total,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                pageSizeOptions: ['10', '20', '50', '100'], // ✅ Opciones de tamaño de página
+                showTotal: (total, range) => 
+                  `${range[0]}-${range[1]} de ${total} equipos`,
+                onChange: (page, pageSize) => {
+                  getEquiposData(page, pageSize, buscar, tipo, estado);
+                },
+                onShowSizeChange: (current, size) => {
+                  getEquiposData(1, size, buscar, tipo, estado);
+                },
+              }}
+          />
           {isModalOpen && (
             <RegistrarEquipo
               isModalOpen={isModalOpen}
@@ -463,7 +602,7 @@ const Equipos = ({ setTitle }) => {
                     .includes(input.toLowerCase())
                 }
                 allowClear
-                options={optionsFilter.map((item) => item)}
+                options={optionsFilterEstado.map((item) => item)}
               />
             </div>
             <div
@@ -488,12 +627,27 @@ const Equipos = ({ setTitle }) => {
               marginTop: "20px",
             }}
           >
-            <Tag color="#4f6f52">Total de equipos: {search2.length}</Tag>
+            <Tag color="#4f6f52">Total de equipos: {inventariadosPagination.total}</Tag>
           </div>
           <Table
             columns={columns}
-            dataSource={search2}
+            dataSource={search2.length > 0 ? search2 : inventariados}
             style={{ marginTop: "5px" }}
+            pagination={{
+              current: inventariadosPagination.current,
+              pageSize: inventariadosPagination.pageSize,
+              total: inventariadosPagination.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: (total, range) => 
+                `${range[0]}-${range[1]} de ${total} equipos inventariados`,
+              onChange: (page, pageSize) => {
+                getEquiposData(page, pageSize);
+              },
+              onShowSizeChange: (current, size) => {
+                getEquiposData(1, size);
+              },
+            }}
           />
           {isModalOpen && (
             <RegistrarEquipo

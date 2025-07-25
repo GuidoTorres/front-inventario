@@ -4,13 +4,12 @@ import RegistrarCargos from "./RegistrarCargos";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 
-const Cargos = ({ setTitle }) => {
+const Cargos = () => {
   const [cargos, setCargos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editar, setEditar] = useState();
   const [search, setSearch] = useState([]);
   useEffect(() => {
-    setTitle("Dependencias");
     getCargos();
   }, []);
   const getCargos = async () => {
@@ -147,7 +146,7 @@ const Cargos = ({ setTitle }) => {
           </Button>
         </div>
       </div>
-      <Table columns={columns} dataSource={search} />;
+      <Table columns={columns} dataSource={search} />
       {isModalOpen && (
         <RegistrarCargos
           isModalOpen={isModalOpen}

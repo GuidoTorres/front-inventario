@@ -6,7 +6,7 @@ import "./styles/mainPage.css";
 import HeaderContent from "../components/HeaderContent";
 import TablaTrabajador from "../components/trabajador/TablaTrabajador";
 import Equipos from "../components/equipos/Equipos";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Areas from "../components/areas/Areas";
 import Mantenimientos from "../components/mantenimientos/Mantenimientos";
 import Dashboard from "../components/dashboard/Dashboard";
@@ -26,8 +26,19 @@ const MainPage = () => {
   const location = useLocation();
 
   const [collapsed, setCollapsed] = useState(true);
-  const [title, setTitle] = useState("Trabajador");
   const { setIsLogged, isLogged } = useContext(InventarioContext);
+
+  const getTitle = () => {
+    const path = location.pathname;
+    if (path.includes('/actualizar/equipos')) return 'Actualizar Equipos';
+    if (path.includes('/equipos')) return 'Equipos';
+    if (path.includes('/trabajadores')) return 'Trabajadores';
+    if (path.includes('/dashboard')) return 'Dashboard';
+    if (path.includes('/dependencias')) return 'Dependencias';
+    if (path.includes('/subdependencias')) return 'Subdependencias';
+    if (path.includes('/reportes')) return 'Reportes';
+    return 'Inventario'; // Título por defecto
+  };
 
   return (
     <Layout>
@@ -54,15 +65,16 @@ const MainPage = () => {
 
           <Layout>
             <Header className="header">
-              <HeaderContent title={title} />
+              <HeaderContent title={getTitle()} />
             </Header>
             <Content className="content">
               <Routes>
+                <Route path="/" element={<Navigate to="/equipos" />} />
                 <Route
                   path="/trabajadores"
                   element={
                     <ProtectedRoute>
-                      <TablaTrabajador setTitle={setTitle} />
+                      <TablaTrabajador />
                     </ProtectedRoute>
                   }
                 />
@@ -70,7 +82,7 @@ const MainPage = () => {
                   path="/menu/equipos"
                   element={
                     <ProtectedRoute>
-                      <MenuEquipos setTitle={setTitle} />
+                      <MenuEquipos />
                     </ProtectedRoute>
                   }
                 />
@@ -78,7 +90,7 @@ const MainPage = () => {
                   path="/actualizar/equipos"
                   element={
                     <ProtectedRoute>
-                      <ActualizarEquipos setTitle={setTitle} />
+                      <ActualizarEquipos />
                     </ProtectedRoute>
                   }
                 />
@@ -86,7 +98,7 @@ const MainPage = () => {
                   path="/equipos"
                   element={
                     <ProtectedRoute>
-                      <Equipos setTitle={setTitle} />
+                      <Equipos />
                     </ProtectedRoute>
                   }
                 />
@@ -94,7 +106,7 @@ const MainPage = () => {
                   path="/subdependencias"
                   element={
                     <ProtectedRoute>
-                      <Areas setTitle={setTitle} />
+                      <Areas />
                     </ProtectedRoute>
                   }
                 />
@@ -102,19 +114,19 @@ const MainPage = () => {
                   path="/dependencias"
                   element={
                     <ProtectedRoute>
-                      <Cargos setTitle={setTitle} />
+                      <Cargos />
                     </ProtectedRoute>
                   }
                 />
                 {/* <Route
                   path="/mantenimiento"
-                  element={<ProtectedRoute><Mantenimientos setTitle={setTitle} /></ProtectedRoute>}
+                  element={<ProtectedRoute><Mantenimientos /></ProtectedRoute>}
                 /> */}
                 <Route
                   path="/dashboard"
                   element={
                     <ProtectedRoute>
-                      <Dashboard setTitle={setTitle} />
+                      <Dashboard />
                     </ProtectedRoute>
                   }
                 />
@@ -122,7 +134,7 @@ const MainPage = () => {
                   path="/reportes"
                   element={
                     <ProtectedRoute>
-                      <BienesOficina setTitle={setTitle} />
+                      <BienesOficina />
                     </ProtectedRoute>
                   }
                 />

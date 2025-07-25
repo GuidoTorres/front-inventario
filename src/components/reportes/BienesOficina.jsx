@@ -3,7 +3,7 @@ import { Button, Card, Col, Row, Select, Statistic, Table, Tag } from "antd";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 
-const BienesOficina = ({ setTitle }) => {
+const BienesOficina = () => {
   const [equipos, setEquipos] = useState([]);
   const [buscar, setBuscar] = useState("");
   const [tipo, setTipo] = useState("");
@@ -24,7 +24,6 @@ const BienesOficina = ({ setTitle }) => {
   const [search, setSearch] = useState([]);
 
   useEffect(() => {
-    setTitle("Reporte de Equipos");
     getEquipos();
     getSedes();
     getDependencias();

@@ -18,14 +18,13 @@ import {
 import Search from "antd/es/input/Search";
 import ModalTrabajadorEquipos from "./ModalTrabajadorEquipos";
 
-const TablaTrabajador = ({ setTitle }) => {
+const TablaTrabajador = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [trabajadores, setTrabajadores] = useState([]);
   const [editar, setEditar] = useState();
   const [search, setSearch] = useState([]);
   useEffect(() => {
-    setTitle("Trabajadores");
     getTrabajadores();
   }, []);
 
